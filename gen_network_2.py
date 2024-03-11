@@ -38,10 +38,8 @@ import hashlib
 def prepare_graph_file(gv_filename, layout="invalid", custom_topology_info=None):
   """ Opens graphviz file, writes header and returns file pointer"""
   global options, args
-  try: 
-    dot = open(gv_filename, 'w');
-  except IOError: 
-    print("Could not open file " + gv_filename); sys.exit(-1);
+  try: dot = open(gv_filename, 'w');
+  except IOError: print "Could not open file " + gv_filename; sys.exit(-1);
 
   # Write header
   dot.write('digraph ' + options.topology + '_' + str(options.num_routers) + 'routers {\n');
@@ -69,7 +67,7 @@ def prepare_graph_file(gv_filename, layout="invalid", custom_topology_info=None)
     if(options.graph_nodes):  # Add endpoint nodes
       dot.write(endpoint_node_style);
       for r in range(options.num_routers):
-        dot.write('node [label="N'+str(r)+'"] N'+str(r)+';\n');
+	dot.write('node [label="N'+str(r)+'"] N'+str(r)+';\n');
 
   # For mesh and torus position nodes
   elif (options.topology == "mesh" or options.topology == "torus"): # arrange nodes in a grid
@@ -84,7 +82,7 @@ def prepare_graph_file(gv_filename, layout="invalid", custom_topology_info=None)
       dot.write(endpoint_node_style);
       rt_id = 0;
       for c in range(options.routers_per_column):
-        for r in range(options.routers_per_row):
+	for r in range(options.routers_per_row):
           dot.write('\nnode [label="N'+str(rt_id)+'" pos="'+str(r*1.5+0.75)+','+str(c*1.5+0.75)+'!"] N'+str(rt_id)+'\n');
           rt_id = rt_id+1
 
@@ -95,7 +93,7 @@ def prepare_graph_file(gv_filename, layout="invalid", custom_topology_info=None)
     if(options.graph_nodes):  # Add endpoint nodes
       dot.write(endpoint_node_style);
       for r in range(options.num_routers-1):
-        dot.write('node [label="N'+str(r)+'"] N'+str(r)+';\n');
+	dot.write('node [label="N'+str(r)+'"] N'+str(r)+';\n');
 
   # For Fat Tree position nodes
   elif (options.topology == "fat_tree"): # arrange nodes in a tree
@@ -120,7 +118,7 @@ def prepare_graph_file(gv_filename, layout="invalid", custom_topology_info=None)
       for sr in range(rts_in_stage):  # subrouter in particular stage
         dot.write('\nnode [label="N'+str(sr*2)+'" pos="'+str(sr*2-0.5)+','+str(-2)+'!"] N'+str(sr*2)+'\n');
         dot.write('\nnode [label="N'+str(sr*2+1)+'" pos="'+str(sr*2+0.5)+','+str(-2)+'!"] N'+str(sr*2+1)+'\n');
-        #dot.write('node [label="N'+str(r)+'"] N'+str(r)+';\n');
+	#dot.write('node [label="N'+str(r)+'"] N'+str(r)+';\n');
 
   # For Butterfly position nodes
   elif (options.topology == "butterfly"): # arrange nodes in left-to-right stages
@@ -138,17 +136,17 @@ def prepare_graph_file(gv_filename, layout="invalid", custom_topology_info=None)
       dot.write(endpoint_node_style);
       stage = 0; # bottom stage 
       for sr in range(rts_in_stage):  # subrouter in particular stage
-        # left nodes
+	# left nodes
         #dot.write('\nnode [label="N'+str(sr*2)+'" pos="'+str(-2)+','+str(sr*2-0.5)+'!"] N'+str(sr*2)+'\n');
         #dot.write('\nnode [label="N'+str(sr*2+1)+'" pos="'+str(-2)+','+str(sr*2+0.5)+'!"] N'+str(sr*2+1)+'\n');
         dot.write('\nnode [label="N" pos="'+str(-2)+','+str(sr*2-0.5)+'!"] N'+str(sr*2+options.num_routers)+'\n');
         dot.write('\nnode [label="N" pos="'+str(-2)+','+str(sr*2+0.5)+'!"] N'+str(sr*2+1+options.num_routers)+'\n');
-        # right nodes
-        #dot.write('\nnode [label="N'+str(sr*2+options.num_routers)+'" pos="'+str(num_stages*4-2)+','+str(sr*2-0.5)+'!"] N'+str(sr*2+options.num_routers)+'\n');
+	# right nodes
+	#dot.write('\nnode [label="N'+str(sr*2+options.num_routers)+'" pos="'+str(num_stages*4-2)+','+str(sr*2-0.5)+'!"] N'+str(sr*2+options.num_routers)+'\n');
         #dot.write('\nnode [label="N'+str(sr*2+1+options.num_routers)+'" pos="'+str(num_stages*4-2)+','+str(sr*2+0.5)+'!"] N'+str(sr*2+1+options.num_routers)+'\n');
-        dot.write('\nnode [label="N'+str(sr*2)+'" pos="'+str(num_stages*4-2)+','+str(sr*2-0.5)+'!"] N'+str(sr*2)+'\n');
+	dot.write('\nnode [label="N'+str(sr*2)+'" pos="'+str(num_stages*4-2)+','+str(sr*2-0.5)+'!"] N'+str(sr*2)+'\n');
         dot.write('\nnode [label="N'+str(sr*2+1)+'" pos="'+str(num_stages*4-2)+','+str(sr*2+0.5)+'!"] N'+str(sr*2+1)+'\n');
-        #dot.write('node [label="N'+str(r)+'"] N'+str(r)+';\n');
+	#dot.write('node [label="N'+str(r)+'"] N'+str(r)+';\n');
 
   # For Unidirectional single switch topology only draw one router
   elif (options.topology == "uni_single_switch"):
@@ -157,9 +155,9 @@ def prepare_graph_file(gv_filename, layout="invalid", custom_topology_info=None)
     if(options.graph_nodes):  # Add endpoint nodes
       dot.write(endpoint_node_style);
       for r in range(options.recv_endpoints):
-        dot.write('node [label="N'+str(r)+'"] N'+str(r)+';\n');
+	dot.write('node [label="N'+str(r)+'"] N'+str(r)+';\n');
       for r in range(options.send_endpoints):
-        dot.write('node [label="N'+str(r+options.recv_endpoints)+'"] N'+str(r+options.recv_endpoints)+';\n');
+	dot.write('node [label="N'+str(r+options.recv_endpoints)+'"] N'+str(r+options.recv_endpoints)+';\n');
 
 
   # For Unidirectional Tree position nodes
@@ -195,11 +193,11 @@ def prepare_graph_file(gv_filename, layout="invalid", custom_topology_info=None)
     last_stage_width = (1.0*options.uni_tree_fanout)**num_stages; #   num_leaf_nodes/(1.0*options.uni_tree_fanout);
     if(options.graph_nodes):  # Make more space to add endpoint nodes
       last_stage_width = (1.0*options.uni_tree_fanout)**(num_stages+1); #   num_leaf_nodes/(1.0*options.uni_tree_fanout);
-    print("width", last_stage_width)
+    print "width", last_stage_width
     for stage in range(num_stages+1):
       gap = last_stage_width / (1.0*rts_in_stage)
       offset = gap/2.0
-      print("offset ", offset)
+      print "offset ", offset
       for r in range(rts_in_stage):
         dot.write('\nnode [label="R'+str(cur_rt)+'" pos="'+str(offset+gap*r*1.0)+','+str((-1)*stage*2)+'!"] R'+str(cur_rt)+'\n');
         cur_rt += 1;
@@ -209,50 +207,50 @@ def prepare_graph_file(gv_filename, layout="invalid", custom_topology_info=None)
       dot.write(endpoint_node_style);
 
       for stage in range(num_stages+1):
-        gap = 1.0; #last_stage_width / laste_)
-        offset = 0.5 + (last_stage_width - 1.0*num_root_nodes) / 2.0
-        print("gap",gap,"offset",offset)
-        if(stage == 0): # root
-          #if(options.uni_tree_inputs < options.uni_tree_outputs): # down tree has inputs at root
-          if(build_down_tree): # down tree has inputs at root
-            for i in range(options.uni_tree_inputs):
-              # Leave input ports anonymous 
-              dot.write('\nnode [label="N'+ "" +'" pos="'+str(offset+gap*i*1.0)+','+str(2)+'!"] N'+str(i+options.uni_tree_outputs)+'\n');
-          else: # up tree has outputs at root
-            for o in range(options.uni_tree_outputs):
-              dot.write('\nnode [label="N'+str(o)+'" pos="'+str(offset+gap*o*1.0)+','+str(2)+'!"] N'+str(o)+'\n');
-              #dot.write('\nnode [label="R'+str(cur_rt)+'" pos="'+str(offset+gap*r*1.0)+','+str((-1)*stage*2)+'!"] R'+str(cur_rt)+'\n');
+	gap = 1.0; #last_stage_width / laste_)
+	offset = 0.5 + (last_stage_width - 1.0*num_root_nodes) / 2.0
+	print "gap",gap,"offset",offset
+	if(stage == 0): # root
+	  #if(options.uni_tree_inputs < options.uni_tree_outputs): # down tree has inputs at root
+	  if(build_down_tree): # down tree has inputs at root
+       	    for i in range(options.uni_tree_inputs):
+	      # Leave input ports anonymous 
+	      dot.write('\nnode [label="N'+ "" +'" pos="'+str(offset+gap*i*1.0)+','+str(2)+'!"] N'+str(i+options.uni_tree_outputs)+'\n');
+	  else: # up tree has outputs at root
+	    for o in range(options.uni_tree_outputs):
+	      dot.write('\nnode [label="N'+str(o)+'" pos="'+str(offset+gap*o*1.0)+','+str(2)+'!"] N'+str(o)+'\n');
+	      #dot.write('\nnode [label="R'+str(cur_rt)+'" pos="'+str(offset+gap*r*1.0)+','+str((-1)*stage*2)+'!"] R'+str(cur_rt)+'\n');
 
-        if(stage == num_stages): # last stage
-          gap = 1.0; #last_stage_width / (1.0*rts_in_stage)
-          offset = gap/2.0
-          print("offset ", offset)
-          #for r in range(rts_in_stage):
-          #if(options.uni_tree_inputs < options.uni_tree_outputs): # down tree has outputs at leafs
-          if(build_down_tree): # down tree has outputs at leafs
+	if(stage == num_stages): # last stage
+	  gap = 1.0; #last_stage_width / (1.0*rts_in_stage)
+	  offset = gap/2.0
+	  print "offset ", offset
+	  #for r in range(rts_in_stage):
+	  #if(options.uni_tree_inputs < options.uni_tree_outputs): # down tree has outputs at leafs
+	  if(build_down_tree): # down tree has outputs at leafs
             if(options.uni_tree_distribute_leaves):  #distribute leaves
-              for o in range(options.uni_tree_outputs):
-                rt = get_uni_tree_distributed_rt(o, num_stages, options.uni_tree_fanout);
-                r_off = o/(options.uni_tree_fanout**(num_stages));
-                dist = (rt*options.uni_tree_fanout+r_off);
-                #dot.write('\nnode [label="N'+ "" +'" pos="'+str(offset+jump*a*1.0+b*gap)+','+str(2)+'!"] N'+str(i+options.uni_tree_outputs)+'\n');
-                dot.write('\nnode [label="N'+str(o)+'" pos="'+str(offset+dist*1.0*gap)+','+str((-1)*(stage+1)*2)+'!"] N'+str(o)+'\n');
-            else:
-              for o in range(options.uni_tree_outputs):
-                dot.write('\nnode [label="N'+str(o)+'" pos="'+str(offset+gap*o*1.0)+','+str((-1)*(stage+1)*2)+'!"] N'+str(o)+'\n');
-                #dot.write('\nnode [label="R'+str(cur_rt)+'" pos="'+str(offset+gap*r*1.0)+','+str((-1)*stage*2)+'!"] R'+str(cur_rt)+'\n');
-          else: # up tree has inputs at leafs
+	      for o in range(options.uni_tree_outputs):
+		rt = get_uni_tree_distributed_rt(o, num_stages, options.uni_tree_fanout);
+		r_off = o/(options.uni_tree_fanout**(num_stages));
+		dist = (rt*options.uni_tree_fanout+r_off);
+		#dot.write('\nnode [label="N'+ "" +'" pos="'+str(offset+jump*a*1.0+b*gap)+','+str(2)+'!"] N'+str(i+options.uni_tree_outputs)+'\n');
+		dot.write('\nnode [label="N'+str(o)+'" pos="'+str(offset+dist*1.0*gap)+','+str((-1)*(stage+1)*2)+'!"] N'+str(o)+'\n');
+	    else:
+	      for o in range(options.uni_tree_outputs):
+		dot.write('\nnode [label="N'+str(o)+'" pos="'+str(offset+gap*o*1.0)+','+str((-1)*(stage+1)*2)+'!"] N'+str(o)+'\n');
+		#dot.write('\nnode [label="R'+str(cur_rt)+'" pos="'+str(offset+gap*r*1.0)+','+str((-1)*stage*2)+'!"] R'+str(cur_rt)+'\n');
+	  else: # up tree has inputs at leafs
             if(options.uni_tree_distribute_leaves):  #distribute leaves
-              for i in range(options.uni_tree_inputs):
-                rt = get_uni_tree_distributed_rt(i, num_stages, options.uni_tree_fanout);
-                r_off = i/(options.uni_tree_fanout**(num_stages));
-                dist = (rt*options.uni_tree_fanout+r_off);
-                    #dot.write('\nnode [label="N'+ "" +'" pos="'+str(offset+jump*a*1.0+b*gap)+','+str(2)+'!"] N'+str(i+options.uni_tree_outputs)+'\n');
-                dot.write('\nnode [label="N'+ "" +'" pos="'+str(offset+dist*1.0*gap)+','+str((-1)*(stage+1)*2)+'!"] N'+str(i+options.uni_tree_outputs)+'\n');
-            else:
-              for i in range(options.uni_tree_inputs):
-                dot.write('\nnode [label="N'+ "" +'" pos="'+str(offset+gap*i*1.0)+','+str((-1)*(stage+1)*2)+'!"] N'+str(i+options.uni_tree_outputs)+'\n');
-                # use upper unused node IDs for the inputs ports
+	      for i in range(options.uni_tree_inputs):
+		rt = get_uni_tree_distributed_rt(i, num_stages, options.uni_tree_fanout);
+		r_off = i/(options.uni_tree_fanout**(num_stages));
+		dist = (rt*options.uni_tree_fanout+r_off);
+    		#dot.write('\nnode [label="N'+ "" +'" pos="'+str(offset+jump*a*1.0+b*gap)+','+str(2)+'!"] N'+str(i+options.uni_tree_outputs)+'\n');
+		dot.write('\nnode [label="N'+ "" +'" pos="'+str(offset+dist*1.0*gap)+','+str((-1)*(stage+1)*2)+'!"] N'+str(i+options.uni_tree_outputs)+'\n');
+	    else:
+	      for i in range(options.uni_tree_inputs):
+		dot.write('\nnode [label="N'+ "" +'" pos="'+str(offset+gap*i*1.0)+','+str((-1)*(stage+1)*2)+'!"] N'+str(i+options.uni_tree_outputs)+'\n');
+		# use upper unused node IDs for the inputs ports
 
   # For custom topology consult topology_info
   elif (options.topology == "custom"):
@@ -263,7 +261,7 @@ def prepare_graph_file(gv_filename, layout="invalid", custom_topology_info=None)
       dot.write(endpoint_node_style);
       #for r in range(options.num_routers):
       for r in range( max( custom_topology_info['max_send_ports'], custom_topology_info['max_recv_ports']) ):
-        dot.write('node [label="N'+str(r)+'"] N'+str(r)+';\n');
+	dot.write('node [label="N'+str(r)+'"] N'+str(r)+';\n');
 
   # other topologies 
   else:
@@ -273,7 +271,7 @@ def prepare_graph_file(gv_filename, layout="invalid", custom_topology_info=None)
     if(options.graph_nodes):  # Add endpoint nodes
       dot.write(endpoint_node_style);
       for r in range(options.num_routers):
-        dot.write('node [label="N'+str(r)+'"] N'+str(r)+';\n');
+	dot.write('node [label="N'+str(r)+'"] N'+str(r)+';\n');
 
 #  # Describe and rank nodes
 #  if (options.topology == "mesh" or options.topology == "torus"): # arrange nodes in a grid
@@ -282,7 +280,7 @@ def prepare_graph_file(gv_filename, layout="invalid", custom_topology_info=None)
 #      dot.write('{ node [shape=circle]\n');
 #      for r in range(options.routers_per_row):
 #        dot.write(' R'+str(rt_id));
-#        rt_id = rt_id+1
+#	rt_id = rt_id+1
 #      dot.write('\n}\n');
 #      
 #  else:
@@ -303,7 +301,7 @@ def gen_single_switch_links(links, dot_filename, dump_topology_filename):
   # Dump topology file
   if options.dump_topology_file:
     try: topo_dump = open(dump_topology_filename, 'w');
-    except IOError: print("Could not open file " + dump_topology_filename); sys.exit(-1);
+    except IOError: print "Could not open file " + dump_topology_filename; sys.exit(-1);
   
   # Generate graphviz .gv file
   if options.gen_graph: dot = prepare_graph_file(dot_filename + ".gv", "circo");
@@ -325,10 +323,10 @@ def gen_single_switch_links(links, dot_filename, dump_topology_filename):
   
   # Close topology dump file
   if options.dump_topology_file: topo_dump.close();
-  if options.verbose and options.dump_topology_file: print('Dumped topology file: ' + dump_topology_filename)
+  if options.verbose and options.dump_topology_file: print 'Dumped topology file: ' + dump_topology_filename
   # Close graphviz file
   if options.gen_graph: dot.write('}\n'); dot.close();
-  if options.verbose and options.gen_graph: print('Generated graphviz file: ' + dot_filename + ".gv")
+  if options.verbose and options.gen_graph: print 'Generated graphviz file: ' + dot_filename + ".gv"
   
   return link_id
 
@@ -338,30 +336,27 @@ def gen_single_switch_routing(file_prefix, dump_routing_filename):
 
   # Dump routing file
   if options.dump_routing_file:
-    try: 
-      route_dump = open(dump_routing_filename, 'w');
-    except IOError: 
-      print("Could not open file " + dump_routing_filename); sys.exit(-1);
+    try: route_dump = open(dump_routing_filename, 'w');
+    except IOError: print "Could not open file " + dump_routing_filename; sys.exit(-1);
 
   link_id = -1;
   # Just a single router
   filename = options.output_dir + '/' + file_prefix + str(0) + '.hex'
   try: rt = open(filename, 'w');
-  except IOError: 
-    print("Could not open file " + filename); sys.exit(-1);
+  except IOError: print "Could not open file " + filename; sys.exit(-1);
 
   for dst in range(options.num_routers):
     out_port = dst
     rt.write('%x\n' % (out_port) );
-    if options.verbose: print('route:'+str(0)+'->'+str(dst)+':'+str(out_port))
+    if options.verbose: print 'route:'+str(0)+'->'+str(dst)+':'+str(out_port)
     if options.dump_routing_file: route_dump.write('R'+str(0)+': '+str(dst)+' -> '+str(out_port)+'\n');
 
   rt.close();
-  if options.verbose: print('Generated routing file: ' + filename)
+  if options.verbose: print 'Generated routing file: ' + filename
 
   # Close routing dump file
   if options.dump_routing_file: route_dump.close();
-  if options.verbose and options.dump_routing_file: print('Dumped routing file: ' + dump_routing_filename)
+  if options.verbose and options.dump_routing_file: print 'Dumped routing file: ' + dump_routing_filename
 
   # Hack - set num_routers to actual number of routers
   options.num_routers = 1;
@@ -376,7 +371,7 @@ def gen_line_links(links, dot_filename, dump_topology_filename):
   # Dump topology file
   if options.dump_topology_file:
     try: topo_dump = open(dump_topology_filename, 'w');
-    except IOError: print("Could not open file " + dump_topology_filename); sys.exit(-1);
+    except IOError: print "Could not open file " + dump_topology_filename; sys.exit(-1);
 
   # Generate graphviz .gv file
   #if options.gen_graph: dot = prepare_graph_file(dot_filename + ".gv", "circo");
@@ -413,10 +408,10 @@ def gen_line_links(links, dot_filename, dump_topology_filename):
   
   # Close topology dump file
   if options.dump_topology_file: topo_dump.close();
-  if options.verbose and options.dump_topology_file: print('Dumped topology file: ' + dump_topology_filename)
+  if options.verbose and options.dump_topology_file: print 'Dumped topology file: ' + dump_topology_filename
   # Close graphviz file
   if options.gen_graph: dot.write('}\n'); dot.close();
-  if options.verbose and options.gen_graph: print('Generated graphviz file: ' + dot_filename + ".gv")
+  if options.verbose and options.gen_graph: print 'Generated graphviz file: ' + dot_filename + ".gv"
   
   return link_id
 
@@ -427,41 +422,40 @@ def gen_line_routing(file_prefix, dump_routing_filename):
   # Dump routing file
   if options.dump_routing_file:
     try: route_dump = open(dump_routing_filename, 'w');
-    except IOError: print("Could not open file " + dump_routing_filename); sys.exit(-1);
+    except IOError: print "Could not open file " + dump_routing_filename; sys.exit(-1);
 
   link_id = -1;
   for src in range(options.num_routers):
     filename = options.output_dir + '/' + file_prefix + str(src) + '.hex'
     try: rt = open(filename, 'w');
-    except IOError: 
-      print("Could not open file " + filename); sys.exit(-1);
+    except IOError: print "Could not open file " + filename; sys.exit(-1);
 
     for dst in range(options.num_routers):
       if src == dst:  # packet is destined to me, extract from router, i.e. out_port 0
-        rt.write('%x\n' % (0) );
-        #str.format(  );
-        if options.verbose: print('route:'+str(src)+'->'+str(dst)+':'+'0')
+	rt.write('%x\n' % (0) );
+	#str.format(  );
+        if options.verbose: print 'route:'+str(src)+'->'+str(dst)+':'+'0'
         if options.dump_routing_file: route_dump.write('R'+str(src)+': '+str(dst)+' -> '+str(0)+'\n');
       else:           # packet is not for me, decide which way to send
-        diff = dst-src
-        dist = abs(diff)
-        if (diff >= 0):   # Send to the right, i.e. using out_port 1
-          out_port = 1
-          rt.write('%x\n' % (out_port) );
-          if options.verbose: print('route:'+str(src)+'->'+str(dst)+':'+str(out_port))
+	diff = dst-src
+	dist = abs(diff)
+	if (diff >= 0):   # Send to the right, i.e. using out_port 1
+	  out_port = 1
+	  rt.write('%x\n' % (out_port) );
+	  if options.verbose: print 'route:'+str(src)+'->'+str(dst)+':'+str(out_port)
           if options.dump_routing_file: route_dump.write('R'+str(src)+': '+str(dst)+' -> '+str(out_port)+'\n');
-        else:             # Send to the left, i.e. using out_port 2
-          out_port = 2
-          rt.write('%x\n' % (out_port) );
-          if options.verbose: print('route:'+str(src)+'->'+str(dst)+':'+str(out_port))
+	else:             # Send to the left, i.e. using out_port 2
+	  out_port = 2
+	  rt.write('%x\n' % (out_port) );
+	  if options.verbose: print 'route:'+str(src)+'->'+str(dst)+':'+str(out_port)
           if options.dump_routing_file: route_dump.write('R'+str(src)+': '+str(dst)+' -> '+str(out_port)+'\n');
   
     rt.close();
-    if options.verbose: print('Generated routing file: ' + filename)
+    if options.verbose: print 'Generated routing file: ' + filename
 
   # Close routing dump file
   if options.dump_routing_file: route_dump.close();
-  if options.verbose and options.dump_routing_file: print('Dumped routing file: ' + dump_routing_filename)
+  if options.verbose and options.dump_routing_file: print 'Dumped routing file: ' + dump_routing_filename
 
 
 #######################################
@@ -473,7 +467,7 @@ def gen_ring_links(links, dot_filename, dump_topology_filename):
   # Dump topology file
   if options.dump_topology_file:
     try: topo_dump = open(dump_topology_filename, 'w');
-    except IOError: print("Could not open file " + dump_topology_filename); sys.exit(-1);
+    except IOError: print "Could not open file " + dump_topology_filename; sys.exit(-1);
 
   # Generate graphviz .gv file
   if options.gen_graph: dot = prepare_graph_file(dot_filename + ".gv", "circo");
@@ -502,10 +496,10 @@ def gen_ring_links(links, dot_filename, dump_topology_filename):
   
   # Close topology dump file
   if options.dump_topology_file: topo_dump.close();
-  if options.verbose and options.dump_topology_file: print('Dumped topology file: ' + dump_topology_filename)
+  if options.verbose and options.dump_topology_file: print 'Dumped topology file: ' + dump_topology_filename
   # Close graphviz file
   if options.gen_graph: dot.write('}\n'); dot.close();
-  if options.verbose and options.gen_graph: print('Generated graphviz file: ' + dot_filename + ".gv")
+  if options.verbose and options.gen_graph: print 'Generated graphviz file: ' + dot_filename + ".gv"
   
   return link_id
 
@@ -516,7 +510,7 @@ def gen_ring_routing(file_prefix, dump_routing_filename):
   # Dump routing file
   if options.dump_routing_file:
     try: route_dump = open(dump_routing_filename, 'w');
-    except IOError: print("Could not open file " + dump_routing_filename); sys.exit(-1);
+    except IOError: print "Could not open file " + dump_routing_filename; sys.exit(-1);
 
   link_id = -1;
   for src in range(options.num_routers):
@@ -524,27 +518,27 @@ def gen_ring_routing(file_prefix, dump_routing_filename):
     try:
       rt = open(filename, 'w')
     except IOError:
-      print("Could not open file " + filename)
+      print "Could not open file " + filename
       sys.exit(-1)
 
     for dst in range(options.num_routers):
       if src == dst:  # packet is destined to me, extract from router, i.e. out_port 0
-        rt.write('%x\n' % (0) );
-        #str.format(  );
-        if options.verbose: print('route:'+str(src)+'->'+str(dst)+':'+'0')
+	rt.write('%x\n' % (0) );
+	#str.format(  );
+        if options.verbose: print 'route:'+str(src)+'->'+str(dst)+':'+'0'
         if options.dump_routing_file: route_dump.write('R'+str(src)+': '+str(dst)+' -> '+str(0)+'\n');
       else:           # packet is not for me, send to next router, i.e. out_port 1
         #next_router = (src+1)%options.num_routers;
-        rt.write('%x\n' % (1) );
-        if options.verbose: print('route:'+str(src)+'->'+str(dst)+':'+'1')
+	rt.write('%x\n' % (1) );
+        if options.verbose: print 'route:'+str(src)+'->'+str(dst)+':'+'1'
         if options.dump_routing_file: route_dump.write('R'+str(src)+': '+str(dst)+' -> '+str(1)+'\n');
   
     rt.close();
-    if options.verbose: print('Generated routing file: ' + filename)
+    if options.verbose: print 'Generated routing file: ' + filename
 
   # Close routing dump file
   if options.dump_routing_file: route_dump.close();
-  if options.verbose and options.dump_routing_file: print('Dumped routing file: ' + dump_routing_filename)
+  if options.verbose and options.dump_routing_file: print 'Dumped routing file: ' + dump_routing_filename
 
 
 #######################################
@@ -556,7 +550,7 @@ def gen_double_ring_links(links, dot_filename, dump_topology_filename):
   # Dump topology file
   if options.dump_topology_file:
     try: topo_dump = open(dump_topology_filename, 'w');
-    except IOError: print("Could not open file " + dump_topology_filename); sys.exit(-1);
+    except IOError: print "Could not open file " + dump_topology_filename; sys.exit(-1);
 
   # Generate graphviz .gv file
   if options.gen_graph: dot = prepare_graph_file(dot_filename + ".gv", "circo"); 
@@ -592,10 +586,10 @@ def gen_double_ring_links(links, dot_filename, dump_topology_filename):
   
   # Close topology dump file
   if options.dump_topology_file: topo_dump.close();
-  if options.verbose and options.dump_topology_file: print('Dumped topology file: ' + dump_topology_filename)
+  if options.verbose and options.dump_topology_file: print 'Dumped topology file: ' + dump_topology_filename
   # Close graphviz file
   if options.gen_graph: dot.write('}\n'); dot.close();
-  if options.verbose and options.gen_graph: print('Generated graphviz file: ' + dot_filename + ".gv")
+  if options.verbose and options.gen_graph: print 'Generated graphviz file: ' + dot_filename + ".gv"
   
   return link_id
 
@@ -606,7 +600,7 @@ def gen_double_ring_routing(file_prefix, dump_routing_filename):
   # Dump routing file
   if options.dump_routing_file:
     try: route_dump = open(dump_routing_filename, 'w');
-    except IOError: print("Could not open file " + dump_routing_filename); sys.exit(-1);
+    except IOError: print "Could not open file " + dump_routing_filename; sys.exit(-1);
 
   link_id = -1;
   for src in range(options.num_routers):
@@ -614,35 +608,35 @@ def gen_double_ring_routing(file_prefix, dump_routing_filename):
     try:
       rt = open(filename, 'w')
     except IOError:
-      print("Could not open file " + filename)
+      print "Could not open file " + filename
       sys.exit(-1)
 
     for dst in range(options.num_routers):
       if src == dst:  # packet is destined to me, extract from router, i.e. out_port 0
-        rt.write('%x\n' % (0) );
-        #str.format(  );
-        if options.verbose: print('route:'+str(src)+'->'+str(dst)+':'+'0')
+	rt.write('%x\n' % (0) );
+	#str.format(  );
+        if options.verbose: print 'route:'+str(src)+'->'+str(dst)+':'+'0'
         if options.dump_routing_file: route_dump.write('R'+str(src)+': '+str(dst)+' -> '+str(0)+'\n');
       else:           # packet is not for me, decide which way to send
-        diff = dst-src
-        dist = abs(diff)
-        if (diff >= 0 and dist <= options.num_routers/2) or (diff < 0 and dist > options.num_routers/2) :   # Send clockwise, i.e. using out_port 1
-          out_port = 1
-          rt.write('%x\n' % (out_port) );
-          if options.verbose: print('route:'+str(src)+'->'+str(dst)+':'+str(out_port))
+	diff = dst-src
+	dist = abs(diff)
+	if (diff >= 0 and dist <= options.num_routers/2) or (diff < 0 and dist > options.num_routers/2) :   # Send clockwise, i.e. using out_port 1
+	  out_port = 1
+	  rt.write('%x\n' % (out_port) );
+	  if options.verbose: print 'route:'+str(src)+'->'+str(dst)+':'+str(out_port)
           if options.dump_routing_file: route_dump.write('R'+str(src)+': '+str(dst)+' -> '+str(out_port)+'\n');
-        else:                                         # Send counter-clockwise, i.e. using out_port 1
-          out_port = 2
-          rt.write('%x\n' % (out_port) );
-          if options.verbose: print('route:'+str(src)+'->'+str(dst)+':'+str(out_port))
+	else:                                         # Send counter-clockwise, i.e. using out_port 1
+	  out_port = 2
+	  rt.write('%x\n' % (out_port) );
+	  if options.verbose: print 'route:'+str(src)+'->'+str(dst)+':'+str(out_port)
           if options.dump_routing_file: route_dump.write('R'+str(src)+': '+str(dst)+' -> '+str(out_port)+'\n');
   
     rt.close();
-    if options.verbose: print('Generated routing file: ' + filename)
+    if options.verbose: print 'Generated routing file: ' + filename
 
   # Close routing dump file
   if options.dump_routing_file: route_dump.close();
-  if options.verbose and options.dump_routing_file: print('Dumped routing file: ' + dump_routing_filename)
+  if options.verbose and options.dump_routing_file: print 'Dumped routing file: ' + dump_routing_filename
 
 #######################################
 ## Star
@@ -653,7 +647,7 @@ def gen_star_links(links, dot_filename, dump_topology_filename):
   # Dump topology file
   if options.dump_topology_file:
     try: topo_dump = open(dump_topology_filename, 'w');
-    except IOError: print("Could not open file " + dump_topology_filename); sys.exit(-1);
+    except IOError: print "Could not open file " + dump_topology_filename; sys.exit(-1);
   # Generate graphviz .gv file
   if options.gen_graph: dot = prepare_graph_file(dot_filename + ".gv", "circo");  # neato also works well for small networks
   
@@ -687,10 +681,10 @@ def gen_star_links(links, dot_filename, dump_topology_filename):
 
   # Close topology dump file
   if options.dump_topology_file: topo_dump.close();
-  if options.verbose and options.dump_topology_file: print('Dumped topology file: ' + dump_topology_filename)
+  if options.verbose and options.dump_topology_file: print 'Dumped topology file: ' + dump_topology_filename
   # Close graphviz file
   if options.gen_graph: dot.write('}\n'); dot.close();
-  if options.verbose and options.gen_graph: print('Generated graphviz file: ' + dot_filename + ".gv")
+  if options.verbose and options.gen_graph: print 'Generated graphviz file: ' + dot_filename + ".gv"
   
   return link_id
 
@@ -701,7 +695,7 @@ def gen_star_routing(file_prefix, dump_routing_filename):
   # Dump routing file
   if options.dump_routing_file:
     try: route_dump = open(dump_routing_filename, 'w');
-    except IOError: print("Could not open file " + dump_routing_filename); sys.exit(-1);
+    except IOError: print "Could not open file " + dump_routing_filename; sys.exit(-1);
 
   link_id = -1;
   for src in range(options.num_routers):
@@ -709,32 +703,32 @@ def gen_star_routing(file_prefix, dump_routing_filename):
     try:
       rt = open(filename, 'w')
     except IOError:
-      print("Could not open file " + filename)
+      print "Could not open file " + filename
       sys.exit(-1)
 
     for dst in range(options.num_routers):
       if (src == 0):  # routing for central node
-        out_port = dst;  # directly send to sattelite router
-        rt.write('%x\n' % (out_port) );
-        if options.verbose: print('route:'+str(src)+'->'+str(dst)+':'+str(out_port))
+	out_port = dst;  # directly send to sattelite router
+	rt.write('%x\n' % (out_port) );
+	if options.verbose: print 'route:'+str(src)+'->'+str(dst)+':'+str(out_port)
         if options.dump_routing_file: route_dump.write('R'+str(src)+': '+str(dst)+' -> '+str(out_port)+'\n');
       else:           # routing for sattelite routers
         if (src-1) == dst:  # packet is destined to me, extract from router, i.e. out_port 0
-          rt.write('%x\n' % (0) );
-          if options.verbose: print('route:'+str(src)+'->'+str(dst)+':'+'0')
+	  rt.write('%x\n' % (0) );
+	  if options.verbose: print 'route:'+str(src)+'->'+str(dst)+':'+'0'
           if options.dump_routing_file: route_dump.write('R'+str(src)+': '+str(dst)+' -> '+str(0)+'\n');
-        else: 
-          out_port = 1;  # always send to central router
-          rt.write('%x\n' % (out_port) );
-          if options.verbose: print('route:'+str(src)+'->'+str(dst)+':'+str(out_port))
+	else: 
+	  out_port = 1;  # always send to central router
+	  rt.write('%x\n' % (out_port) );
+	  if options.verbose: print 'route:'+str(src)+'->'+str(dst)+':'+str(out_port)
           if options.dump_routing_file: route_dump.write('R'+str(src)+': '+str(dst)+' -> '+str(out_port)+'\n');
   
     rt.close();
-    if options.verbose: print('Generated routing file: ' + filename)
+    if options.verbose: print 'Generated routing file: ' + filename
 
   # Close routing dump file
   if options.dump_routing_file: route_dump.close();
-  if options.verbose and options.dump_routing_file: print('Dumped routing file: ' + dump_routing_filename)
+  if options.verbose and options.dump_routing_file: print 'Dumped routing file: ' + dump_routing_filename
 
 
 #######################################
@@ -746,7 +740,7 @@ def gen_mesh_links(links, dot_filename, dump_topology_filename):
   # Dump topology file
   if options.dump_topology_file:
     try: topo_dump = open(dump_topology_filename, 'w');
-    except IOError: print("Could not open file " + dump_topology_filename); sys.exit(-1);
+    except IOError: print "Could not open file " + dump_topology_filename; sys.exit(-1);
 
   # Generate graphviz .gv file
   if options.gen_graph: dot = prepare_graph_file(dot_filename + ".gv", "neato");
@@ -824,8 +818,8 @@ def gen_mesh_links(links, dot_filename, dump_topology_filename):
       links.write('recv_ports_ifaces['+str(user_port)+'] = routers['+str(rt)+'].out_ports['+str(out_port)+'];\n')
 
       if options.dump_topology_file:
-        topo_dump.write('SendPort '+str(user_port)+' -> R'+str(rt)+':'+str(in_port)+'\n')
-        topo_dump.write('RecvPort '+str(user_port)+' -> R'+str(rt)+':'+str(out_port)+'\n')
+	topo_dump.write('SendPort '+str(user_port)+' -> R'+str(rt)+':'+str(in_port)+'\n')
+	topo_dump.write('RecvPort '+str(user_port)+' -> R'+str(rt)+':'+str(out_port)+'\n')
       if options.gen_graph and options.graph_nodes: # also include the endpoints
         #dot.write('\nnode [label="N'+str(user_port)+'"] N'+str(user_port)+'\n');
         dot.write('\nnode [label="N'+str(user_port)+'" pos="'+str(r*1.5+r_offset)+','+str(c*1.5+c_offset)+'!"] N'+str(user_port)+'\n');
@@ -837,10 +831,10 @@ def gen_mesh_links(links, dot_filename, dump_topology_filename):
 
   # Close topology dump file
   if options.dump_topology_file: topo_dump.close();
-  if options.verbose and options.dump_topology_file: print('Dumped topology file: ' + dump_topology_filename)
+  if options.verbose and options.dump_topology_file: print 'Dumped topology file: ' + dump_topology_filename
   # Close graphviz file
   if options.gen_graph: dot.write('}\n'); dot.close();
-  if options.verbose and options.gen_graph: print('Generated graphviz file: ' + dot_filename + ".gv")
+  if options.verbose and options.gen_graph: print 'Generated graphviz file: ' + dot_filename + ".gv"
   
   return link_id+1
 
@@ -851,7 +845,7 @@ def gen_mesh_routing(file_prefix, dump_routing_filename):
   # Dump routing file
   if options.dump_routing_file:
     try: route_dump = open(dump_routing_filename, 'w');
-    except IOError: print("Could not open file " + dump_routing_filename); sys.exit(-1);
+    except IOError: print "Could not open file " + dump_routing_filename; sys.exit(-1);
 
   link_id = -1;
     
@@ -860,47 +854,47 @@ def gen_mesh_routing(file_prefix, dump_routing_filename):
     for src in range(options.num_routers):
       filename = options.output_dir + '/' + file_prefix + str(src) + '.hex'
       try:
-        rt = open(filename, 'w')
+	rt = open(filename, 'w')
       except IOError:
-        print("Could not open file " + filename)
-        sys.exit(-1)
+	print "Could not open file " + filename
+	sys.exit(-1)
 
       for dst in range(options.num_routers):
-        if src == dst:  # packet is destined to me, extract from router, i.e. out_port 0
-          rt.write('%x\n' % (0) );
-          #str.format(  );
-          if options.verbose: print('route:'+str(src)+'->'+str(dst)+':'+'0')
+	if src == dst:  # packet is destined to me, extract from router, i.e. out_port 0
+	  rt.write('%x\n' % (0) );
+	  #str.format(  );
+	  if options.verbose: print 'route:'+str(src)+'->'+str(dst)+':'+'0'
           if options.dump_routing_file: route_dump.write('R'+str(src)+': '+str(dst)+' -> '+str(0)+'\n');
-        else:           # packet is not for me, decide which way to send
-          src_row = src / options.routers_per_row
-          src_col = src % options.routers_per_row
-          dst_row = dst / options.routers_per_row
-          dst_col = dst % options.routers_per_row
-          if(src_col != dst_col):  # Need to send horizontally
-            diff = dst_col-src_col
-            dist = abs(diff)
-            if (diff >= 0):   # Send to the right, i.e. using out_port 3
-              out_port = 3
-              rt.write('%x\n' % (out_port) );
-              if options.verbose: print('route:'+str(src)+'->'+str(dst)+':'+str(out_port))
+	else:           # packet is not for me, decide which way to send
+	  src_row = src / options.routers_per_row
+	  src_col = src % options.routers_per_row
+	  dst_row = dst / options.routers_per_row
+	  dst_col = dst % options.routers_per_row
+	  if(src_col != dst_col):  # Need to send horizontally
+	    diff = dst_col-src_col
+	    dist = abs(diff)
+	    if (diff >= 0):   # Send to the right, i.e. using out_port 3
+	      out_port = 3
+	      rt.write('%x\n' % (out_port) );
+	      if options.verbose: print 'route:'+str(src)+'->'+str(dst)+':'+str(out_port)
               if options.dump_routing_file: route_dump.write('R'+str(src)+': '+str(dst)+' -> '+str(out_port)+'\n');
-            else:             # Send to the left, i.e. using out_port 1
-              out_port = 1
-              rt.write('%x\n' % (out_port) );
-              if options.verbose: print('route:'+str(src)+'->'+str(dst)+':'+str(out_port))
+	    else:             # Send to the left, i.e. using out_port 1
+	      out_port = 1
+	      rt.write('%x\n' % (out_port) );
+	      if options.verbose: print 'route:'+str(src)+'->'+str(dst)+':'+str(out_port)
               if options.dump_routing_file: route_dump.write('R'+str(src)+': '+str(dst)+' -> '+str(out_port)+'\n');
-          else:  # Need to send vertically
-            diff = dst_row-src_row
-            dist = abs(diff)
-            if (diff >= 0):   # Send down, i.e. using out_port 4
-              out_port = 4
-              rt.write('%x\n' % (out_port) );
-              if options.verbose: print('route:'+str(src)+'->'+str(dst)+':'+str(out_port))
+	  else:  # Need to send vertically
+	    diff = dst_row-src_row
+	    dist = abs(diff)
+	    if (diff >= 0):   # Send down, i.e. using out_port 4
+	      out_port = 4
+	      rt.write('%x\n' % (out_port) );
+	      if options.verbose: print 'route:'+str(src)+'->'+str(dst)+':'+str(out_port)
               if options.dump_routing_file: route_dump.write('R'+str(src)+': '+str(dst)+' -> '+str(out_port)+'\n');
-            else:             # Send up, i.e. using out_port 2
-              out_port = 2
-              rt.write('%x\n' % (out_port) );
-              if options.verbose: print('route:'+str(src)+'->'+str(dst)+':'+str(out_port))
+	    else:             # Send up, i.e. using out_port 2
+	      out_port = 2
+	      rt.write('%x\n' % (out_port) );
+	      if options.verbose: print 'route:'+str(src)+'->'+str(dst)+':'+str(out_port)
               if options.dump_routing_file: route_dump.write('R'+str(src)+': '+str(dst)+' -> '+str(out_port)+'\n');
 
   ## Expose extra ports
@@ -909,55 +903,55 @@ def gen_mesh_routing(file_prefix, dump_routing_filename):
     for src in range(options.num_routers):
       filename = options.output_dir + '/' + file_prefix + str(src) + '.hex'
       try:
-        rt = open(filename, 'w')
+	rt = open(filename, 'w')
       except IOError:
-        print("Could not open file " + filename)
-        sys.exit(-1)
+	print "Could not open file " + filename
+	sys.exit(-1)
 
       for user_port in range(num_total_user_ports):
-        tmp = find_dst_and_output_for_user_port(user_port)
-        dst = tmp[0]
-        if dst == src:  # packet is destined to me, extract from router, i.e. out_port 0
-          out_port = tmp[1]
-          rt.write('%x\n' % (out_port) );
-          #str.format(  );
-          if options.verbose: print('route:'+str(src)+'->'+str(user_port)+':'+str(out_port))
+	tmp = find_dst_and_output_for_user_port(user_port)
+	dst = tmp[0]
+	if dst == src:  # packet is destined to me, extract from router, i.e. out_port 0
+	  out_port = tmp[1]
+	  rt.write('%x\n' % (out_port) );
+	  #str.format(  );
+	  if options.verbose: print 'route:'+str(src)+'->'+str(user_port)+':'+str(out_port)
           if options.dump_routing_file: route_dump.write('R'+str(src)+': '+str(user_port)+' -> '+str(out_port)+'\n');
-        else:           # packet is not for me, decide which way to send
-          src_row = src / options.routers_per_row
-          src_col = src % options.routers_per_row
-          dst_row = dst / options.routers_per_row
-          dst_col = dst % options.routers_per_row
-          if(src_col != dst_col):  # Need to send horizontally
-            diff = dst_col-src_col
-            dist = abs(diff)
-            if (diff >= 0):   # Send to the right, i.e. using out_port 3
-              out_port = 3
-              rt.write('%x\n' % (out_port) );
-              if options.verbose: print('route:'+str(src)+'->'+str(user_port)+':'+str(out_port))
+	else:           # packet is not for me, decide which way to send
+	  src_row = src / options.routers_per_row
+	  src_col = src % options.routers_per_row
+	  dst_row = dst / options.routers_per_row
+	  dst_col = dst % options.routers_per_row
+	  if(src_col != dst_col):  # Need to send horizontally
+	    diff = dst_col-src_col
+	    dist = abs(diff)
+	    if (diff >= 0):   # Send to the right, i.e. using out_port 3
+	      out_port = 3
+	      rt.write('%x\n' % (out_port) );
+	      if options.verbose: print 'route:'+str(src)+'->'+str(user_port)+':'+str(out_port)
               if options.dump_routing_file: route_dump.write('R'+str(src)+': '+str(user_port)+' -> '+str(out_port)+'\n');
-            else:             # Send to the left, i.e. using out_port 1
-              out_port = 1
-              rt.write('%x\n' % (out_port) );
-              if options.verbose: print('route:'+str(src)+'->'+str(user_port)+':'+str(out_port))
+	    else:             # Send to the left, i.e. using out_port 1
+	      out_port = 1
+	      rt.write('%x\n' % (out_port) );
+	      if options.verbose: print 'route:'+str(src)+'->'+str(user_port)+':'+str(out_port)
               if options.dump_routing_file: route_dump.write('R'+str(src)+': '+str(user_port)+' -> '+str(out_port)+'\n');
-          else:  # Need to send vertically
-            diff = dst_row-src_row
-            dist = abs(diff)
-            if (diff >= 0):   # Send down, i.e. using out_port 4
-              out_port = 4
-              rt.write('%x\n' % (out_port) );
-              if options.verbose: print('route:'+str(src)+'->'+str(user_port)+':'+str(out_port))
+	  else:  # Need to send vertically
+	    diff = dst_row-src_row
+	    dist = abs(diff)
+	    if (diff >= 0):   # Send down, i.e. using out_port 4
+	      out_port = 4
+	      rt.write('%x\n' % (out_port) );
+	      if options.verbose: print 'route:'+str(src)+'->'+str(user_port)+':'+str(out_port)
               if options.dump_routing_file: route_dump.write('R'+str(src)+': '+str(user_port)+' -> '+str(out_port)+'\n');
-            else:             # Send up, i.e. using out_port 2
-              out_port = 2
-              rt.write('%x\n' % (out_port) );
-              if options.verbose: print('route:'+str(src)+'->'+str(user_port)+':'+str(out_port))
+	    else:             # Send up, i.e. using out_port 2
+	      out_port = 2
+	      rt.write('%x\n' % (out_port) );
+	      if options.verbose: print 'route:'+str(src)+'->'+str(user_port)+':'+str(out_port)
               if options.dump_routing_file: route_dump.write('R'+str(src)+': '+str(user_port)+' -> '+str(out_port)+'\n');
 
 
     rt.close();
-    if options.verbose: print('Generated routing file: ' + filename)
+    if options.verbose: print 'Generated routing file: ' + filename
 
 # helper function for mesh that exposes extra user ports
 def find_dst_and_output_for_user_port(user_port):
@@ -972,24 +966,24 @@ def find_dst_and_output_for_user_port(user_port):
       is_bottom_side_router = cur_rt >= options.num_routers - options.routers_per_row and cur_rt <  options.num_routers
 
       if(is_left_side_router):
-        cur_user_port = cur_user_port+1
-        if(cur_user_port == user_port):
+	cur_user_port = cur_user_port+1
+	if(cur_user_port == user_port):
           return [cur_rt,1]
       
       if(is_top_side_router):
-        cur_user_port = cur_user_port+1
-        if(cur_user_port == user_port):
-          return [cur_rt,2]
+	cur_user_port = cur_user_port+1
+	if(cur_user_port == user_port):
+	  return [cur_rt,2]
      
       if(is_right_side_router):
-        cur_user_port = cur_user_port+1
-        if(cur_user_port == user_port):
-          return [cur_rt,3]
+	cur_user_port = cur_user_port+1
+	if(cur_user_port == user_port):
+	  return [cur_rt,3]
     
       if(is_bottom_side_router):
-        cur_user_port = cur_user_port+1
-        if(cur_user_port == user_port):
-          return [cur_rt,4]
+	cur_user_port = cur_user_port+1
+	if(cur_user_port == user_port):
+	  return [cur_rt,4]
 
     #is_corner_router = (cur_rt == 0 || cur_rt == options.routers_per_row-1 || cur_rt == options.num_routers - 1 || cur_rt == options.num_routers - 1 - options.routers_per_row)
     #is_top_bottom_router = (cur_rt >= 0 && cur_rt < options.routers_per_row) || (cur_rt >= options.num_routers - options.routers_per_row && cur_rt <  options.num_routers)
@@ -1013,7 +1007,7 @@ def gen_torus_links(links, dot_filename, dump_topology_filename):
   # Dump topology file
   if options.dump_topology_file:
     try: topo_dump = open(dump_topology_filename, 'w');
-    except IOError: print("Could not open file " + dump_topology_filename); sys.exit(-1);
+    except IOError: print "Could not open file " + dump_topology_filename; sys.exit(-1);
   # Generate graphviz .gv file
   if options.gen_graph: dot = prepare_graph_file(dot_filename + ".gv", "neato");
   
@@ -1073,10 +1067,10 @@ def gen_torus_links(links, dot_filename, dump_topology_filename):
 
   # Close topology dump file
   if options.dump_topology_file: topo_dump.close();
-  if options.verbose and options.dump_topology_file: print('Dumped topology file: ' + dump_topology_filename)
+  if options.verbose and options.dump_topology_file: print 'Dumped topology file: ' + dump_topology_filename
   # Close graphviz file
   if options.gen_graph: dot.write('}\n'); dot.close();
-  if options.verbose and options.gen_graph: print('Generated graphviz file: ' + dot_filename + ".gv")
+  if options.verbose and options.gen_graph: print 'Generated graphviz file: ' + dot_filename + ".gv"
   
   return link_id
 
@@ -1087,7 +1081,7 @@ def gen_torus_routing(file_prefix, dump_routing_filename):
   # Dump routing file
   if options.dump_routing_file:
     try: route_dump = open(dump_routing_filename, 'w');
-    except IOError: print("Could not open file " + dump_routing_filename); sys.exit(-1);
+    except IOError: print "Could not open file " + dump_routing_filename; sys.exit(-1);
 
   link_id = -1;
   for src in range(options.num_routers):
@@ -1095,53 +1089,53 @@ def gen_torus_routing(file_prefix, dump_routing_filename):
     try:
       rt = open(filename, 'w')
     except IOError:
-      print("Could not open file " + filename)
+      print "Could not open file " + filename
       sys.exit(-1)
 
     for dst in range(options.num_routers):
       if src == dst:  # packet is destined to me, extract from router, i.e. out_port 0
-        rt.write('%x\n' % (0) );
-        #str.format(  );
-        if options.verbose: print('route:'+str(src)+'->'+str(dst)+':'+'0')
+	rt.write('%x\n' % (0) );
+	#str.format(  );
+        if options.verbose: print 'route:'+str(src)+'->'+str(dst)+':'+'0'
         if options.dump_routing_file: route_dump.write('R'+str(src)+': '+str(dst)+' -> '+str(0)+'\n');
       else:           # packet is not for me, decide which way to send
-        src_row = src / options.routers_per_row
-        src_col = src % options.routers_per_row
-        dst_row = dst / options.routers_per_row
-        dst_col = dst % options.routers_per_row
-        if(src_col != dst_col):  # Need to send horizontally
-          diff = dst_col-src_col
-          dist = abs(diff)
-          if (diff >= 0 and dist <= options.routers_per_row/2) or (diff < 0 and dist > options.routers_per_row/2) :   # Send to the right, i.e. using out_port 3
-            out_port = 3
-            rt.write('%x\n' % (out_port) );
-            if options.verbose: print('route:'+str(src)+'->'+str(dst)+':'+str(out_port))
+	src_row = src / options.routers_per_row
+	src_col = src % options.routers_per_row
+	dst_row = dst / options.routers_per_row
+	dst_col = dst % options.routers_per_row
+	if(src_col != dst_col):  # Need to send horizontally
+	  diff = dst_col-src_col
+	  dist = abs(diff)
+	  if (diff >= 0 and dist <= options.routers_per_row/2) or (diff < 0 and dist > options.routers_per_row/2) :   # Send to the right, i.e. using out_port 3
+	    out_port = 3
+	    rt.write('%x\n' % (out_port) );
+	    if options.verbose: print 'route:'+str(src)+'->'+str(dst)+':'+str(out_port)
             if options.dump_routing_file: route_dump.write('R'+str(src)+': '+str(dst)+' -> '+str(out_port)+'\n');
-          else:             # Send to the left, i.e. using out_port 1
-            out_port = 1
-            rt.write('%x\n' % (out_port) );
-            if options.verbose: print('route:'+str(src)+'->'+str(dst)+':'+str(out_port))
+	  else:             # Send to the left, i.e. using out_port 1
+	    out_port = 1
+	    rt.write('%x\n' % (out_port) );
+	    if options.verbose: print 'route:'+str(src)+'->'+str(dst)+':'+str(out_port)
             if options.dump_routing_file: route_dump.write('R'+str(src)+': '+str(dst)+' -> '+str(out_port)+'\n');
-        else:  # Need to send vertically
-          diff = dst_row-src_row
-          dist = abs(diff)
-          if (diff >= 0 and dist <= options.routers_per_column/2) or (diff < 0 and dist > options.routers_per_column/2) :   # Send down, i.e. using out_port 4
-            out_port = 4
-            rt.write('%x\n' % (out_port) );
-            if options.verbose: print('route:'+str(src)+'->'+str(dst)+':'+str(out_port))
+	else:  # Need to send vertically
+	  diff = dst_row-src_row
+	  dist = abs(diff)
+	  if (diff >= 0 and dist <= options.routers_per_column/2) or (diff < 0 and dist > options.routers_per_column/2) :   # Send down, i.e. using out_port 4
+	    out_port = 4
+	    rt.write('%x\n' % (out_port) );
+	    if options.verbose: print 'route:'+str(src)+'->'+str(dst)+':'+str(out_port)
             if options.dump_routing_file: route_dump.write('R'+str(src)+': '+str(dst)+' -> '+str(out_port)+'\n');
-          else:             # Send up, i.e. using out_port 2
-            out_port = 2
-            rt.write('%x\n' % (out_port) );
-            if options.verbose: print('route:'+str(src)+'->'+str(dst)+':'+str(out_port))
+	  else:             # Send up, i.e. using out_port 2
+	    out_port = 2
+	    rt.write('%x\n' % (out_port) );
+	    if options.verbose: print 'route:'+str(src)+'->'+str(dst)+':'+str(out_port)
             if options.dump_routing_file: route_dump.write('R'+str(src)+': '+str(dst)+' -> '+str(out_port)+'\n');
 
     rt.close();
-    if options.verbose: print('Generated routing file: ' + filename)
+    if options.verbose: print 'Generated routing file: ' + filename
   
   # Close routing dump file
   if options.dump_routing_file: route_dump.close();
-  if options.verbose and options.dump_routing_file: print('Dumped routing file: ' + dump_routing_filename)
+  if options.verbose and options.dump_routing_file: print 'Dumped routing file: ' + dump_routing_filename
 
 
 #######################################
@@ -1153,7 +1147,7 @@ def gen_fully_connected_links(links, dot_filename, dump_topology_filename):
   # Dump topology file
   if options.dump_topology_file:
     try: topo_dump = open(dump_topology_filename, 'w');
-    except IOError: print("Could not open file " + dump_topology_filename); sys.exit(-1);
+    except IOError: print "Could not open file " + dump_topology_filename; sys.exit(-1);
   # Generate graphviz .gv file
   if options.gen_graph: dot = prepare_graph_file(dot_filename + ".gv", "circo");  # neato also works well for small networks
 
@@ -1175,23 +1169,23 @@ def gen_fully_connected_links(links, dot_filename, dump_topology_filename):
   for s in range(0, options.num_routers):
     for d in range(0, options.num_routers):
       if (s != d): # don't create a link to my self
-        if (s < d): 
+	if (s < d): 
           link_id = link_id + 1;
           links.write('links['+str(link_id)+'] <- mkConnectPorts(routers['+str(s)+'], ' + str(d) + ', routers['+str(d)+'], ' + str(s+1) + ');\n')
           if options.dump_topology_file: topo_dump.write('RouterLink '+'R'+str(s)+':'+str(d)+' -> '+'R'+str(d)+':'+str(s+1)+'\n')
           if options.gen_graph: dot.write('R'+str(s)+' -> R'+str(d)+' [ taillabel = "' + str(d) + '", headlabel = "' + str(s+1) + '" ];\n')
-        else:
-          link_id = link_id + 1;
-          links.write('links['+str(link_id)+'] <- mkConnectPorts(routers['+str(s)+'], ' + str(d+1) + ', routers['+str(d)+'], ' + str(s) + ');\n')
+	else:
+	  link_id = link_id + 1;
+	  links.write('links['+str(link_id)+'] <- mkConnectPorts(routers['+str(s)+'], ' + str(d+1) + ', routers['+str(d)+'], ' + str(s) + ');\n')
           if options.dump_topology_file: topo_dump.write('RouterLink '+'R'+str(s)+':'+str(d+1)+' -> '+'R'+str(d)+':'+str(s)+'\n')
           if options.gen_graph: dot.write('R'+str(s)+' -> R'+str(d)+' [ taillabel = "' + str(d+1) + '", headlabel = "' + str(s) + '" ];\n')
  
   # Close topology dump file
   if options.dump_topology_file: topo_dump.close();
-  if options.verbose and options.dump_topology_file: print('Dumped topology file: ' + dump_topology_filename)
+  if options.verbose and options.dump_topology_file: print 'Dumped topology file: ' + dump_topology_filename
   # Close graphviz file
   if options.gen_graph: dot.write('}\n'); dot.close();
-  if options.verbose and options.gen_graph: print('Generated graphviz file: ' + dot_filename + ".gv")
+  if options.verbose and options.gen_graph: print 'Generated graphviz file: ' + dot_filename + ".gv"
   
   return link_id
 
@@ -1202,7 +1196,7 @@ def gen_fully_connected_routing(file_prefix, dump_routing_filename):
   # Dump routing file
   if options.dump_routing_file:
     try: route_dump = open(dump_routing_filename, 'w');
-    except IOError: print("Could not open file " + dump_routing_filename); sys.exit(-1);
+    except IOError: print "Could not open file " + dump_routing_filename; sys.exit(-1);
 
   link_id = -1;
   for src in range(options.num_routers):
@@ -1210,32 +1204,32 @@ def gen_fully_connected_routing(file_prefix, dump_routing_filename):
     try:
       rt = open(filename, 'w')
     except IOError:
-      print("Could not open file " + filename)
+      print "Could not open file " + filename
       sys.exit(-1)
 
   # All routers are a single hop away. Just pick proper output port.
     for dst in range(0, options.num_routers):
       if src == dst:  # packet is destined to me, extract from router, i.e. out_port 0
-        rt.write('%x\n' % (0) );
-        #str.format(  );
-        if options.verbose: print('route:'+str(src)+'->'+str(dst)+':'+'0')
+	rt.write('%x\n' % (0) );
+	#str.format(  );
+        if options.verbose: print 'route:'+str(src)+'->'+str(dst)+':'+'0'
         if options.dump_routing_file: route_dump.write('R'+str(src)+': '+str(dst)+' -> '+str(0)+'\n');
       else:           # packet is not for me, decide which way to send
-        if (src < dst): 
-          rt.write('%x\n' % (dst) )
-          if options.verbose: print('route:'+str(src)+'->'+str(dst)+':'+str(dst))
+	if (src < dst): 
+	  rt.write('%x\n' % (dst) )
+	  if options.verbose: print 'route:'+str(src)+'->'+str(dst)+':'+str(dst)
           if options.dump_routing_file: route_dump.write('R'+str(src)+': '+str(dst)+' -> '+str(dst)+'\n');
-        else:
-          rt.write('%x\n' % (dst+1) );
-          if options.verbose: print('route:'+str(src)+'->'+str(dst)+':'+str(dst+1))
+	else:
+	  rt.write('%x\n' % (dst+1) );
+	  if options.verbose: print 'route:'+str(src)+'->'+str(dst)+':'+str(dst+1)
           if options.dump_routing_file: route_dump.write('R'+str(src)+': '+str(dst)+' -> '+str(dst+1)+'\n');
 
     rt.close();
-    if options.verbose: print('Generated routing file: ' + filename)
+    if options.verbose: print 'Generated routing file: ' + filename
 
   # Close routing dump file
   if options.dump_routing_file: route_dump.close();
-  if options.verbose and options.dump_routing_file: print('Dumped routing file: ' + dump_routing_filename)
+  if options.verbose and options.dump_routing_file: print 'Dumped routing file: ' + dump_routing_filename
 
 
 #######################################
@@ -1247,7 +1241,7 @@ def gen_fat_tree_links(links, dot_filename, dump_topology_filename):
   # Dump topology file
   if options.dump_topology_file:
     try: topo_dump = open(dump_topology_filename, 'w');
-    except IOError: print("Could not open file " + dump_topology_filename); sys.exit(-1);
+    except IOError: print "Could not open file " + dump_topology_filename; sys.exit(-1);
   # Generate graphviz .gv file
   if options.gen_graph: dot = prepare_graph_file(dot_filename + ".gv", "neato");
   
@@ -1268,15 +1262,15 @@ def gen_fat_tree_links(links, dot_filename, dump_topology_filename):
   # Create links for each stage
   num_stages = int(math.log(options.num_routers, 2)) - 2  # counts link stages
   rts_in_stage = options.num_routers/2
-  print('num_stages =', num_stages)
+  print 'num_stages =', num_stages
   for stage in range(num_stages):
     if (stage < num_stages-1):  # not the top stage
       for sr in range(rts_in_stage):  # subrouter in particular stage
         cur_rt = stage * rts_in_stage + sr
 
         #Check if this router belongs to the left or right subset
-        if( (cur_rt & (1<<stage) ) == 0):   # left subset, i.e. has stage-th bit set to 0  (connect above and to the right)
-          #Up links
+	if( (cur_rt & (1<<stage) ) == 0):   # left subset, i.e. has stage-th bit set to 0  (connect above and to the right)
+	  #Up links
           link_id = link_id + 1;
           links.write('links['+str(link_id)+'] <- mkConnectPorts(routers['+str(cur_rt)+'], 2, routers['+str(cur_rt+rts_in_stage)+'], 0);\n')
           if options.dump_topology_file: topo_dump.write('RouterLink '+'R'+str(cur_rt)+':'+str(2)+' -> '+'R'+str(cur_rt+rts_in_stage)+':'+str(0)+'\n')
@@ -1285,9 +1279,9 @@ def gen_fat_tree_links(links, dot_filename, dump_topology_filename):
           links.write('links['+str(link_id)+'] <- mkConnectPorts(routers['+str(cur_rt)+'], 3, routers['+str(cur_rt+rts_in_stage+(1<<stage))+'], 0);\n')
           if options.dump_topology_file: topo_dump.write('RouterLink '+'R'+str(cur_rt)+':'+str(3)+' -> '+'R'+str(cur_rt+rts_in_stage+(1<<stage))+':'+str(0)+'\n')
           if options.gen_graph: dot.write('R'+str(cur_rt)+' -> R'+str(cur_rt+rts_in_stage+(1<<stage))+' [ taillabel = "' + '3' + '", headlabel = "' + '0' + '" ];\n')
-          
-          #Down links
-          link_id = link_id + 1;
+	  
+	  #Down links
+	  link_id = link_id + 1;
           links.write('links['+str(link_id)+'] <- mkConnectPorts(routers['+str(cur_rt+rts_in_stage)+'], 0, routers['+str(cur_rt)+'], 2);\n')
           if options.dump_topology_file: topo_dump.write('RouterLink '+'R'+str(cur_rt+rts_in_stage)+':'+str(0)+' -> '+'R'+str(cur_rt)+':'+str(2)+'\n')
           if options.gen_graph: dot.write('R'+str(cur_rt+rts_in_stage)+' -> R'+str(cur_rt)+' [ taillabel = "' + '0' + '", headlabel = "' + '2' + '" ];\n')
@@ -1296,8 +1290,8 @@ def gen_fat_tree_links(links, dot_filename, dump_topology_filename):
           if options.dump_topology_file: topo_dump.write('RouterLink '+'R'+str(cur_rt+rts_in_stage+(1<<stage))+':'+str(0)+' -> '+'R'+str(cur_rt)+':'+str(3)+'\n')
           if options.gen_graph: dot.write('R'+str(cur_rt+rts_in_stage+(1<<stage))+' -> R'+str(cur_rt)+' [ taillabel = "' + '0' + '", headlabel = "' + '3' + '" ];\n')
 
-        else:   # right subset, i.e. has stage-th bit set to 1  (connect to the left and above)
-          #Up links
+	else:   # right subset, i.e. has stage-th bit set to 1  (connect to the left and above)
+	  #Up links
           link_id = link_id + 1;
           links.write('links['+str(link_id)+'] <- mkConnectPorts(routers['+str(cur_rt)+'], 2, routers['+str(cur_rt+rts_in_stage-(1<<stage))+'], 1);\n')
           if options.dump_topology_file: topo_dump.write('RouterLink '+'R'+str(cur_rt)+':'+str(2)+' -> '+'R'+str(cur_rt+rts_in_stage-(1<<stage))+':'+str(1)+'\n')
@@ -1306,8 +1300,8 @@ def gen_fat_tree_links(links, dot_filename, dump_topology_filename):
           links.write('links['+str(link_id)+'] <- mkConnectPorts(routers['+str(cur_rt)+'], 3, routers['+str(cur_rt+rts_in_stage)+'], 1);\n')
           if options.dump_topology_file: topo_dump.write('RouterLink '+'R'+str(cur_rt)+':'+str(3)+' -> '+'R'+str(cur_rt+rts_in_stage)+':'+str(1)+'\n')
           if options.gen_graph: dot.write('R'+str(cur_rt)+' -> R'+str(cur_rt+rts_in_stage)+' [ taillabel = "' + '3' + '", headlabel = "' + '1' + '" ];\n')
-          
-          #Down links
+	  
+	  #Down links
           link_id = link_id + 1;
           links.write('links['+str(link_id)+'] <- mkConnectPorts(routers['+str(cur_rt+rts_in_stage-(1<<stage))+'], 1, routers['+str(cur_rt)+'], 2);\n')
           if options.dump_topology_file: topo_dump.write('RouterLink '+'R'+str(cur_rt+rts_in_stage-(1<<stage))+':'+str(1)+' -> '+'R'+str(cur_rt)+':'+str(2)+'\n')
@@ -1325,42 +1319,42 @@ def gen_fat_tree_links(links, dot_filename, dump_topology_filename):
       top_port_id = 0; #which port to connect to
       for sr in range(rts_in_stage):
         cur_rt = stage * rts_in_stage + sr
-        #Check if this router belongs to the left or right subset
-        #if( (cur_rt & (1<<stage) ) == 0):   # left subset, i.e. has stage-th bit set to 0  (connect above and to the right)
-          #Up links
-        link_id = link_id + 1;
-        links.write('links['+str(link_id)+'] <- mkConnectPorts(routers['+str(cur_rt)+'], 2, routers['+str(first_top_rt+top_rt_offset)+'], '+str(top_port_id)+');\n')
+	#Check if this router belongs to the left or right subset
+	#if( (cur_rt & (1<<stage) ) == 0):   # left subset, i.e. has stage-th bit set to 0  (connect above and to the right)
+	  #Up links
+	link_id = link_id + 1;
+	links.write('links['+str(link_id)+'] <- mkConnectPorts(routers['+str(cur_rt)+'], 2, routers['+str(first_top_rt+top_rt_offset)+'], '+str(top_port_id)+');\n')
         if options.dump_topology_file: topo_dump.write('RouterLink '+'R'+str(cur_rt)+':'+str(2)+' -> '+'R'+str(first_top_rt+top_rt_offset)+':'+str(top_port_id)+'\n')
-        if options.gen_graph: dot.write('R'+str(cur_rt)+' -> R'+str(first_top_rt+top_rt_offset)+' [ taillabel = "' + '2' + '", headlabel = "' + str(top_port_id) + '" ];\n')
-        #Down links
-        link_id = link_id + 1;
-        links.write('links['+str(link_id)+'] <- mkConnectPorts(routers['+str(first_top_rt+top_rt_offset)+'], '+str(top_port_id)+', routers['+str(cur_rt)+'], 2);\n')
+	if options.gen_graph: dot.write('R'+str(cur_rt)+' -> R'+str(first_top_rt+top_rt_offset)+' [ taillabel = "' + '2' + '", headlabel = "' + str(top_port_id) + '" ];\n')
+	#Down links
+	link_id = link_id + 1;
+	links.write('links['+str(link_id)+'] <- mkConnectPorts(routers['+str(first_top_rt+top_rt_offset)+'], '+str(top_port_id)+', routers['+str(cur_rt)+'], 2);\n')
         if options.dump_topology_file: topo_dump.write('RouterLink '+'R'+str(first_top_rt+top_rt_offset)+':'+str(top_port_id)+' -> '+'R'+str(cur_rt)+':'+str(2)+'\n')
-        if options.gen_graph: dot.write('R'+str(first_top_rt+top_rt_offset)+' -> R'+str(cur_rt)+' [ taillabel = "' + str(top_port_id) + '", headlabel = "' + '2' + '" ];\n')
-        top_rt_offset = (top_rt_offset + 1) % last_stages;
+	if options.gen_graph: dot.write('R'+str(first_top_rt+top_rt_offset)+' -> R'+str(cur_rt)+' [ taillabel = "' + str(top_port_id) + '", headlabel = "' + '2' + '" ];\n')
+	top_rt_offset = (top_rt_offset + 1) % last_stages;
 
-        #Up Links
-        link_id = link_id + 1;
-        links.write('links['+str(link_id)+'] <- mkConnectPorts(routers['+str(cur_rt)+'], 3, routers['+str(first_top_rt+top_rt_offset)+'], '+str(top_port_id)+');\n')
+	#Up Links
+	link_id = link_id + 1;
+	links.write('links['+str(link_id)+'] <- mkConnectPorts(routers['+str(cur_rt)+'], 3, routers['+str(first_top_rt+top_rt_offset)+'], '+str(top_port_id)+');\n')
         if options.dump_topology_file: topo_dump.write('RouterLink '+'R'+str(cur_rt)+':'+str(3)+' -> '+'R'+str(first_top_rt+top_rt_offset)+':'+str(top_port_id)+'\n')
-        if options.gen_graph: dot.write('R'+str(cur_rt)+' -> R'+str(first_top_rt+top_rt_offset)+' [ taillabel = "' + '3' + '", headlabel = "' + str(top_port_id) + '" ];\n')
-        #Down links
-        link_id = link_id + 1;
-        links.write('links['+str(link_id)+'] <- mkConnectPorts(routers['+str(first_top_rt+top_rt_offset)+'], '+str(top_port_id)+', routers['+str(cur_rt)+'], 3);\n')
+	if options.gen_graph: dot.write('R'+str(cur_rt)+' -> R'+str(first_top_rt+top_rt_offset)+' [ taillabel = "' + '3' + '", headlabel = "' + str(top_port_id) + '" ];\n')
+	#Down links
+	link_id = link_id + 1;
+	links.write('links['+str(link_id)+'] <- mkConnectPorts(routers['+str(first_top_rt+top_rt_offset)+'], '+str(top_port_id)+', routers['+str(cur_rt)+'], 3);\n')
         if options.dump_topology_file: topo_dump.write('RouterLink '+'R'+str(first_top_rt+top_rt_offset)+':'+str(top_port_id)+' -> '+'R'+str(cur_rt)+':'+str(3)+'\n')
-        if options.gen_graph: dot.write('R'+str(first_top_rt+top_rt_offset)+' -> R'+str(cur_rt)+' [ taillabel = "' + str(top_port_id) + '", headlabel = "' + '3' + '" ];\n')
-        top_rt_offset = (top_rt_offset + 1) % last_stages;
+	if options.gen_graph: dot.write('R'+str(first_top_rt+top_rt_offset)+' -> R'+str(cur_rt)+' [ taillabel = "' + str(top_port_id) + '", headlabel = "' + '3' + '" ];\n')
+	top_rt_offset = (top_rt_offset + 1) % last_stages;
 
-        if(top_rt_offset == 0):
-            top_port_id = top_port_id + 1; # connect to next port now
+	if(top_rt_offset == 0):
+	    top_port_id = top_port_id + 1; # connect to next port now
 
 
   # Close topology dump file
   if options.dump_topology_file: topo_dump.close();
-  if options.verbose and options.dump_topology_file: print('Dumped topology file: ' + dump_topology_filename)
+  if options.verbose and options.dump_topology_file: print 'Dumped topology file: ' + dump_topology_filename
   # Close graphviz file
   if options.gen_graph: dot.write('}\n'); dot.close();
-  if options.verbose and options.gen_graph: print('Generated graphviz file: ' + dot_filename + ".gv")
+  if options.verbose and options.gen_graph: print 'Generated graphviz file: ' + dot_filename + ".gv"
   
   return link_id+1
 
@@ -1373,70 +1367,68 @@ def gen_fat_tree_routing(file_prefix, dump_routing_filename):
   # Dump routing file
   if options.dump_routing_file:
     try: route_dump = open(dump_routing_filename, 'w');
-    except IOError: print("Could not open file " + dump_routing_filename); sys.exit(-1);
+    except IOError: print "Could not open file " + dump_routing_filename; sys.exit(-1);
 
   num_stages = int(math.log(options.num_routers, 2)) - 1  # counts router stages
   rts_in_stage = options.num_routers/2
-  print('num_stages =', num_stages)
+  print 'num_stages =', num_stages
   for stage in range(num_stages):
     if (stage < num_stages-1):  # not the top stage
       for sr in range(rts_in_stage):  # subrouter in particular stage
         cur_rt = stage * rts_in_stage + sr
-        print('cur_rt ', cur_rt)
-        filename = options.output_dir + '/' + file_prefix + str(cur_rt) + '.hex'
-        try: rt = open(filename, 'w');
-        except IOError: 
-          print("Could not open file " + filename); sys.exit(-1);
+	print 'cur_rt ', cur_rt
+	filename = options.output_dir + '/' + file_prefix + str(cur_rt) + '.hex'
+	try: rt = open(filename, 'w');
+	except IOError: print "Could not open file " + filename; sys.exit(-1);
 
-        for dst in range(options.num_routers):
-          # Look at MS bits to determine up or down direction
-          if(dst>>stage+1 == sr>>stage): #go down
-            # Look at stage-th bit to determine left or right direction
-            if( dst & (1<<(stage)) == 0):   # go left 
-              rt.write('%x\n' % (0) );
-              if options.verbose: print('route:'+str(cur_rt)+'->'+str(dst)+':'+'0')
+	for dst in range(options.num_routers):
+	  # Look at MS bits to determine up or down direction
+	  if(dst>>stage+1 == sr>>stage): #go down
+	    # Look at stage-th bit to determine left or right direction
+	    if( dst & (1<<(stage)) == 0):   # go left 
+	      rt.write('%x\n' % (0) );
+	      if options.verbose: print 'route:'+str(cur_rt)+'->'+str(dst)+':'+'0'
               if options.dump_routing_file: route_dump.write('R'+str(cur_rt)+': '+str(dst)+' -> '+str(0)+'\n');
-            else: #go right
-              rt.write('%x\n' % (1) );
-              if options.verbose: print('route:'+str(cur_rt)+'->'+str(dst)+':'+'1')
+	    else: #go right
+	      rt.write('%x\n' % (1) );
+	      if options.verbose: print 'route:'+str(cur_rt)+'->'+str(dst)+':'+'1'
               if options.dump_routing_file: route_dump.write('R'+str(cur_rt)+': '+str(dst)+' -> '+str(1)+'\n');
-          else: #go up
-            # Look at stage-th bit to determine left or right direction
-            if( dst & (1<<(stage)) == 0):   # go left 
-              rt.write('%x\n' % (2) );
-              if options.verbose: print('route:'+str(cur_rt)+'->'+str(dst)+':'+'2')
+	  else: #go up
+	    # Look at stage-th bit to determine left or right direction
+	    if( dst & (1<<(stage)) == 0):   # go left 
+	      rt.write('%x\n' % (2) );
+	      if options.verbose: print 'route:'+str(cur_rt)+'->'+str(dst)+':'+'2'
               if options.dump_routing_file: route_dump.write('R'+str(cur_rt)+': '+str(dst)+' -> '+str(2)+'\n');
-            else: #go right
-              rt.write('%x\n' % (3) );
-              if options.verbose: print('route:'+str(cur_rt)+'->'+str(dst)+':'+'3')
+	    else: #go right
+	      rt.write('%x\n' % (3) );
+	      if options.verbose: print 'route:'+str(cur_rt)+'->'+str(dst)+':'+'3'
               if options.dump_routing_file: route_dump.write('R'+str(cur_rt)+': '+str(dst)+' -> '+str(3)+'\n');
-        rt.close();
-        if options.verbose: print('Generated routing file: ' + filename)
+	rt.close();
+	if options.verbose: print 'Generated routing file: ' + filename
 
     else: # top stage - you can only go down from here
       for sr in range(rts_in_stage/2):  # subrouter in particular stage
         cur_rt = stage * rts_in_stage + sr
-        print('cur_rt ', cur_rt)
-        filename = options.output_dir + '/' + file_prefix + str(cur_rt) + '.hex'
-        try: rt = open(filename, 'w');
-        except IOError: 
-          print("Could not open file " + filename); sys.exit(-1);
+	print 'cur_rt ', cur_rt
+	filename = options.output_dir + '/' + file_prefix + str(cur_rt) + '.hex'
+	try: rt = open(filename, 'w');
+	except IOError: print "Could not open file " + filename; sys.exit(-1);
 
-        for dst in range(options.num_routers):
-          # Look at 2 MS bits to determine up or down direction
-          out_port = dst>>stage
-          rt.write('%x\n' % (out_port) );
-          if options.verbose: print('route:'+str(cur_rt)+'->'+str(dst)+':'+str(out_port))
+	for dst in range(options.num_routers):
+	  # Look at 2 MS bits to determine up or down direction
+	  out_port = dst>>stage
+	  rt.write('%x\n' % (out_port) );
+	  if options.verbose: print 'route:'+str(cur_rt)+'->'+str(dst)+':'+str(out_port)
           if options.dump_routing_file: route_dump.write('R'+str(cur_rt)+': '+str(dst)+' -> '+str(out_port)+'\n');
-        rt.close();
-        if options.verbose: print('Generated routing file: ' + filename)
+	rt.close();
+	if options.verbose: print 'Generated routing file: ' + filename
   # Hack - set num_routers to actual number of routers
   actual_routers = (num_stages-1) * (options.num_routers/2) + (options.num_routers/4) # n-1 stages + last stage
   options.num_routers = actual_routers;
 
   # Close routing dump file
   if options.dump_routing_file: route_dump.close();
-  if options.verbose and options.dump_routing_file: print('Dumped routing file: ' + dump_routing_filename)
+  if options.verbose and options.dump_routing_file: print 'Dumped routing file: ' + dump_routing_filename
 
 #  for src in range(options.num_routers):
 #    filename = options.output_dir + '/' + file_prefix + str(src) + '.hex'
@@ -1445,20 +1437,20 @@ def gen_fat_tree_routing(file_prefix, dump_routing_filename):
 #
 #    for dst in range(options.num_routers):
 #      if src == dst:  # packet is destined to me, extract from router, i.e. out_port 0
-#        rt.write('%x\n' % (0) );
-#        #str.format(  );
+#	rt.write('%x\n' % (0) );
+#	#str.format(  );
 #        if options.verbose: print 'route:'+str(src)+'->'+str(dst)+':'+'0'
 #      else:           # packet is not for me, decide which way to send
-#        diff = dst-src
-#        dist = abs(diff)
-#        if (diff >= 0):   # Send to the right, i.e. using out_port 1
-#          out_port = 1
-#          rt.write('%x\n' % (out_port) );
-#          if options.verbose: print 'route:'+str(src)+'->'+str(dst)+':'+str(out_port)
-#        else:             # Send to the left, i.e. using out_port 2
-#          out_port = 2
-#          rt.write('%x\n' % (out_port) );
-#          if options.verbose: print 'route:'+str(src)+'->'+str(dst)+':'+str(out_port)
+#	diff = dst-src
+#	dist = abs(diff)
+#	if (diff >= 0):   # Send to the right, i.e. using out_port 1
+#	  out_port = 1
+#	  rt.write('%x\n' % (out_port) );
+#	  if options.verbose: print 'route:'+str(src)+'->'+str(dst)+':'+str(out_port)
+#	else:             # Send to the left, i.e. using out_port 2
+#	  out_port = 2
+#	  rt.write('%x\n' % (out_port) );
+#	  if options.verbose: print 'route:'+str(src)+'->'+str(dst)+':'+str(out_port)
 #  
 #    rt.close();
 #    if options.verbose: print 'Generated routing file: ' + filename
@@ -1474,7 +1466,7 @@ def gen_butterfly_links(links, dot_filename, dump_topology_filename):
   # Dump topology file
   if options.dump_topology_file:
     try: topo_dump = open(dump_topology_filename, 'w');
-    except IOError: print("Could not open file " + dump_topology_filename); sys.exit(-1);
+    except IOError: print "Could not open file " + dump_topology_filename; sys.exit(-1);
   # Generate graphviz .gv file
   if options.gen_graph: dot = prepare_graph_file(dot_filename + ".gv", "neato");
  
@@ -1498,7 +1490,7 @@ def gen_butterfly_links(links, dot_filename, dump_topology_filename):
   
   # Create links for each stage
   link_id = -1;
-  print('num_stages =', num_stages)
+  print 'num_stages =', num_stages
   link_stages = num_stages - 1;
   for stage in range(link_stages):  # first stage is the most-right one
     for sr in range(rts_in_stage):  # subrouter in particular stage
@@ -1507,7 +1499,7 @@ def gen_butterfly_links(links, dot_filename, dump_topology_filename):
       rev_stage = link_stages - stage -1; # count in reverse to make things simpler
       #Check if this router belongs to the top or bottom
       if( (cur_rt &  1<<rev_stage ) == 0):   # top subset  (connect to the right and to bottom right)
-        #Right links
+	#Right links
         link_id = link_id + 1;
         links.write('links['+str(link_id)+'] <- mkConnectPorts(routers['+str(cur_rt)+'], 0, routers['+str(cur_rt+rts_in_stage)+'], 0);\n')
         if options.dump_topology_file: topo_dump.write('RouterLink '+'R'+str(cur_rt)+':'+str(0)+' -> '+'R'+str(cur_rt+rts_in_stage)+':'+str(0)+'\n')
@@ -1516,9 +1508,9 @@ def gen_butterfly_links(links, dot_filename, dump_topology_filename):
         links.write('links['+str(link_id)+'] <- mkConnectPorts(routers['+str(cur_rt)+'], 1, routers['+str(cur_rt+rts_in_stage+(1<<rev_stage))+'], 0);\n')
         if options.dump_topology_file: topo_dump.write('RouterLink '+'R'+str(cur_rt)+':'+str(1)+' -> '+'R'+str(cur_rt+rts_in_stage+(1<<rev_stage))+':'+str(0)+'\n')
         if options.gen_graph: dot.write('R'+str(cur_rt)+' -> R'+str(cur_rt+rts_in_stage+(1<<rev_stage))+' [ taillabel = "' + '1' + '", headlabel = "' + '0' + '" ];\n')
-        
-        #Down links
-        #link_id = link_id + 1;
+	
+	#Down links
+	#link_id = link_id + 1;
         #links.write('links['+str(link_id)+'] <- mkConnectPorts(routers['+str(cur_rt+rts_in_stage)+'], 0, routers['+str(cur_rt)+'], 2);\n')
         #if options.gen_graph: dot.write('R'+str(cur_rt+rts_in_stage)+' -> R'+str(cur_rt)+' [ taillabel = "' + '0' + '", headlabel = "' + '2' + '" ];\n')
         #link_id = link_id + 1;
@@ -1526,7 +1518,7 @@ def gen_butterfly_links(links, dot_filename, dump_topology_filename):
         #if options.gen_graph: dot.write('R'+str(cur_rt+rts_in_stage+(1<<stage))+' -> R'+str(cur_rt)+' [ taillabel = "' + '0' + '", headlabel = "' + '3' + '" ];\n')
 
       else:   # bottom subset, (connect to the right and top right)
-        #Up links
+	#Up links
         link_id = link_id + 1;
         links.write('links['+str(link_id)+'] <- mkConnectPorts(routers['+str(cur_rt)+'], 0, routers['+str(cur_rt+rts_in_stage-(1<<rev_stage))+'], 1);\n')
         if options.dump_topology_file: topo_dump.write('RouterLink '+'R'+str(cur_rt)+':'+str(0)+' -> '+'R'+str(cur_rt+rts_in_stage-(1<<rev_stage))+':'+str(1)+'\n')
@@ -1535,8 +1527,8 @@ def gen_butterfly_links(links, dot_filename, dump_topology_filename):
         links.write('links['+str(link_id)+'] <- mkConnectPorts(routers['+str(cur_rt)+'], 1, routers['+str(cur_rt+rts_in_stage)+'], 1);\n')
         if options.dump_topology_file: topo_dump.write('RouterLink '+'R'+str(cur_rt)+':'+str(1)+' -> '+'R'+str(cur_rt+rts_in_stage)+':'+str(1)+'\n')
         if options.gen_graph: dot.write('R'+str(cur_rt)+' -> R'+str(cur_rt+rts_in_stage)+' [ taillabel = "' + '1' + '", headlabel = "' + '1' + '" ];\n')
-        
-        #Down links
+	
+	#Down links
         #link_id = link_id + 1;
         #links.write('links['+str(link_id)+'] <- mkConnectPorts(routers['+str(cur_rt+rts_in_stage-(1<<stage))+'], 1, routers['+str(cur_rt)+'], 2);\n')
         #if options.gen_graph: dot.write('R'+str(cur_rt+rts_in_stage-(1<<stage))+' -> R'+str(cur_rt)+' [ taillabel = "' + '1' + '", headlabel = "' + '2' + '" ];\n')
@@ -1546,10 +1538,10 @@ def gen_butterfly_links(links, dot_filename, dump_topology_filename):
 
   # Close topology dump file
   if options.dump_topology_file: topo_dump.close();
-  if options.verbose and options.dump_topology_file: print('Dumped topology file: ' + dump_topology_filename)
+  if options.verbose and options.dump_topology_file: print 'Dumped topology file: ' + dump_topology_filename
   # Close graphviz file
   if options.gen_graph: dot.write('}\n'); dot.close();
-  if options.verbose and options.gen_graph: print('Generated graphviz file: ' + dot_filename + ".gv")
+  if options.verbose and options.gen_graph: print 'Generated graphviz file: ' + dot_filename + ".gv"
   
   return link_id+1
   sys.exit(0)
@@ -1562,61 +1554,60 @@ def gen_butterfly_routing(file_prefix, dump_routing_filename):
   # Dump routing file
   if options.dump_routing_file:
     try: route_dump = open(dump_routing_filename, 'w');
-    except IOError: print("Could not open file " + dump_routing_filename); sys.exit(-1);
+    except IOError: print "Could not open file " + dump_routing_filename; sys.exit(-1);
 
   # Calculate number of stages and routers per stage
   num_stages = int(math.log(options.num_routers, 2));  # number of stages - log2(N)
   rts_in_stage = options.num_routers/2;  # switches per stage - N/2
   last_stage_offset = (num_stages-1)*rts_in_stage;
 
-  print('num_stages =', num_stages)
+  print 'num_stages =', num_stages
   for stage in range(num_stages):
     for sr in range(rts_in_stage):  # subrouter in particular stage
       cur_rt = stage * rts_in_stage + sr
       rev_stage = num_stages - stage -1; # count in reverse to make things simpler
-      print('cur_rt ', cur_rt)
+      print 'cur_rt ', cur_rt
       filename = options.output_dir + '/' + file_prefix + str(cur_rt) + '.hex'
       try: rt = open(filename, 'w');
-      except IOError: 
-        print("Could not open file " + filename); sys.exit(-1);
+      except IOError: print "Could not open file " + filename; sys.exit(-1);
 
       for dst in range(options.num_routers):
-        # Look at stage-th bit to determine left or right direction
-        if( dst & (1<<(rev_stage)) == 0):   # go down
-          rt.write('%x\n' % (0) );
-          if options.verbose: print('route:'+str(cur_rt)+'->'+str(dst)+':'+'0')
+	# Look at stage-th bit to determine left or right direction
+	if( dst & (1<<(rev_stage)) == 0):   # go down
+	  rt.write('%x\n' % (0) );
+	  if options.verbose: print 'route:'+str(cur_rt)+'->'+str(dst)+':'+'0'
           if options.dump_routing_file: route_dump.write('R'+str(cur_rt)+': '+str(dst)+' -> '+str(0)+'\n');
-        else: #go up
-          rt.write('%x\n' % (1) );
-          if options.verbose: print('route:'+str(cur_rt)+'->'+str(dst)+':'+'1')
+	else: #go up
+	  rt.write('%x\n' % (1) );
+	  if options.verbose: print 'route:'+str(cur_rt)+'->'+str(dst)+':'+'1'
           if options.dump_routing_file: route_dump.write('R'+str(cur_rt)+': '+str(dst)+' -> '+str(1)+'\n');
 
-        ## Look at MS bits to determine up or down direction
-        #if(dst>>rev_stage+1 == sr>>rev_stage): #go down
-        #  # Look at stage-th bit to determine left or right direction
-        #  if( dst & (1<<(rev_stage)) == 0):   # go left 
-        #    rt.write('%x\n' % (0) );
-        #    if options.verbose: print 'route:'+str(cur_rt)+'->'+str(dst)+':'+'0'
-        #  else: #go right
-        #    rt.write('%x\n' % (1) );
-        #    if options.verbose: print 'route:'+str(cur_rt)+'->'+str(dst)+':'+'1'
-        #else: #go up
-        #  # Look at stage-th bit to determine left or right direction
-        #  if( dst & (1<<(rev_stage)) == 0):   # go left 
-        #    rt.write('%x\n' % (2) );
-        #    if options.verbose: print 'route:'+str(cur_rt)+'->'+str(dst)+':'+'2'
-        #  else: #go right
-        #    rt.write('%x\n' % (3) );
-        #    if options.verbose: print 'route:'+str(cur_rt)+'->'+str(dst)+':'+'3'
+	## Look at MS bits to determine up or down direction
+	#if(dst>>rev_stage+1 == sr>>rev_stage): #go down
+	#  # Look at stage-th bit to determine left or right direction
+	#  if( dst & (1<<(rev_stage)) == 0):   # go left 
+	#    rt.write('%x\n' % (0) );
+	#    if options.verbose: print 'route:'+str(cur_rt)+'->'+str(dst)+':'+'0'
+	#  else: #go right
+	#    rt.write('%x\n' % (1) );
+	#    if options.verbose: print 'route:'+str(cur_rt)+'->'+str(dst)+':'+'1'
+	#else: #go up
+	#  # Look at stage-th bit to determine left or right direction
+	#  if( dst & (1<<(rev_stage)) == 0):   # go left 
+	#    rt.write('%x\n' % (2) );
+	#    if options.verbose: print 'route:'+str(cur_rt)+'->'+str(dst)+':'+'2'
+	#  else: #go right
+	#    rt.write('%x\n' % (3) );
+	#    if options.verbose: print 'route:'+str(cur_rt)+'->'+str(dst)+':'+'3'
       rt.close();
-      if options.verbose: print('Generated routing file: ' + filename)
+      if options.verbose: print 'Generated routing file: ' + filename
   # Hack - set num_routers to actual number of routers
   actual_routers = (num_stages) * (options.num_routers/2) # n stages, each n/2 routers
   options.num_routers = actual_routers;
   
   # Close routing dump file
   if options.dump_routing_file: route_dump.close();
-  if options.verbose and options.dump_routing_file: print('Dumped routing file: ' + dump_routing_filename)
+  if options.verbose and options.dump_routing_file: print 'Dumped routing file: ' + dump_routing_filename
 
 
 #######################################
@@ -1628,7 +1619,7 @@ def gen_uni_single_switch_links(links, dot_filename, dump_topology_filename):
   # Dump topology file
   if options.dump_topology_file:
     try: topo_dump = open(dump_topology_filename, 'w');
-    except IOError: print("Could not open file " + dump_topology_filename); sys.exit(-1);
+    except IOError: print "Could not open file " + dump_topology_filename; sys.exit(-1);
   # Generate graphviz .gv file
   if options.gen_graph: dot = prepare_graph_file(dot_filename + ".gv", "circo");
 
@@ -1654,10 +1645,10 @@ def gen_uni_single_switch_links(links, dot_filename, dump_topology_filename):
   
   # Close topology dump file
   if options.dump_topology_file: topo_dump.close();
-  if options.verbose and options.dump_topology_file: print('Dumped topology file: ' + dump_topology_filename)
+  if options.verbose and options.dump_topology_file: print 'Dumped topology file: ' + dump_topology_filename
   # Close graphviz file
   if options.gen_graph: dot.write('}\n'); dot.close();
-  if options.verbose and options.gen_graph: print('Generated graphviz file: ' + dot_filename + ".gv")
+  if options.verbose and options.gen_graph: print 'Generated graphviz file: ' + dot_filename + ".gv"
   
   return link_id
 
@@ -1703,7 +1694,7 @@ def gen_uni_tree_links(links, dot_filename, dump_topology_filename):
   # Dump topology file
   if options.dump_topology_file:
     try: topo_dump = open(dump_topology_filename, 'w');
-    except IOError: print("Could not open file " + dump_topology_filename); sys.exit(-1);
+    except IOError: print "Could not open file " + dump_topology_filename; sys.exit(-1);
   # Generate graphviz .gv file
   if options.gen_graph: dot = prepare_graph_file(dot_filename + ".gv", "neato");
   
@@ -1725,47 +1716,47 @@ def gen_uni_tree_links(links, dot_filename, dump_topology_filename):
     num_root_nodes = options.uni_tree_inputs
     num_leaf_nodes = options.uni_tree_outputs
     num_stages = int(math.ceil(math.log(num_leaf_nodes, options.uni_tree_fanout))) - 1  # counts link stages
-    print("num_stages ",num_stages)
+    print "num_stages ",num_stages
     # Expose user send/receive ports
     for i in range(options.uni_tree_inputs):
       links.write('send_ports_ifaces['+str(i)+'] = routers[0].in_ports['+str(i)+'];\n')
       if options.dump_topology_file:
-        topo_dump.write('SendPort '+str(i)+' -> R'+str(0)+':'+str(i)+'\n')
+	topo_dump.write('SendPort '+str(i)+' -> R'+str(0)+':'+str(i)+'\n')
       if options.gen_graph and options.graph_nodes: # also include the endpoints
-        dot.write('N'+str(i+options.uni_tree_outputs)+' -> R'+str(0)+' [ headlabel = "' + str(i) + '" ];\n')
+	dot.write('N'+str(i+options.uni_tree_outputs)+' -> R'+str(0)+' [ headlabel = "' + str(i) + '" ];\n')
     # Find first and last router id of last stage where nodes attach
     final_stage_rt_first_id = 0
     for i in range(num_stages):
       final_stage_rt_first_id += options.uni_tree_fanout**i
-    print("final_stage_rt_first_id ", final_stage_rt_first_id)
+    print "final_stage_rt_first_id ", final_stage_rt_first_id
     final_stage_rt_last_id = final_stage_rt_first_id * options.uni_tree_fanout
-    print("final_stage_rt_first_id ", final_stage_rt_last_id)
+    print "final_stage_rt_first_id ", final_stage_rt_last_id
     
     
     num_final_stage_rts = (final_stage_rt_last_id+1) - final_stage_rt_first_id;
     if(options.uni_tree_distribute_leaves): 
       for recv_port_id in range(options.uni_tree_outputs):
-        o = final_stage_rt_first_id + get_uni_tree_distributed_rt(recv_port_id, num_stages, options.uni_tree_fanout);
-        p = recv_port_id/(options.uni_tree_fanout**num_stages)
-        links.write('recv_ports_ifaces['+str(recv_port_id)+'] = routers['+str(o)+'].out_ports['+str(p)+'];\n')
+	o = final_stage_rt_first_id + get_uni_tree_distributed_rt(recv_port_id, num_stages, options.uni_tree_fanout);
+	p = recv_port_id/(options.uni_tree_fanout**num_stages)
+	links.write('recv_ports_ifaces['+str(recv_port_id)+'] = routers['+str(o)+'].out_ports['+str(p)+'];\n')
         if options.dump_topology_file:
-          topo_dump.write('RecvPort '+str(recv_port_id)+' -> R'+str(0)+':'+str(p)+'\n')
-        if options.gen_graph and options.graph_nodes: # also include the endpoints
-          dot.write('R'+str(o)+' -> N'+str(recv_port_id)+' [ taillabel = "' + str(p) + '" ];\n')
-        links.write('recv_ports_info_ifaces['+str(recv_port_id)+'] =  get_port_info_ifc('+str(recv_port_id)+');\n')
-        recv_port_id += 1;
+	  topo_dump.write('RecvPort '+str(recv_port_id)+' -> R'+str(0)+':'+str(p)+'\n')
+	if options.gen_graph and options.graph_nodes: # also include the endpoints
+	  dot.write('R'+str(o)+' -> N'+str(recv_port_id)+' [ taillabel = "' + str(p) + '" ];\n')
+	links.write('recv_ports_info_ifaces['+str(recv_port_id)+'] =  get_port_info_ifc('+str(recv_port_id)+');\n')
+	recv_port_id += 1;
     else:
       recv_port_id = 0;
       for o in range(final_stage_rt_first_id, final_stage_rt_last_id+1):
-        for p in range(options.uni_tree_fanout):
-          if(recv_port_id < options.uni_tree_outputs): # Stop once you've created enough output ports, even if the tree has more outputs
-            links.write('recv_ports_ifaces['+str(recv_port_id)+'] = routers['+str(o)+'].out_ports['+str(p)+'];\n')
-            if options.dump_topology_file:
-              topo_dump.write('RecvPort '+str(recv_port_id)+' -> R'+str(0)+':'+str(p)+'\n')
-            if options.gen_graph and options.graph_nodes: # also include the endpoints
-              dot.write('R'+str(o)+' -> N'+str(recv_port_id)+' [ taillabel = "' + str(p) + '" ];\n')
-            links.write('recv_ports_info_ifaces['+str(recv_port_id)+'] =  get_port_info_ifc('+str(recv_port_id)+');\n')
-            recv_port_id += 1;
+	for p in range(options.uni_tree_fanout):
+	  if(recv_port_id < options.uni_tree_outputs): # Stop once you've created enough output ports, even if the tree has more outputs
+	    links.write('recv_ports_ifaces['+str(recv_port_id)+'] = routers['+str(o)+'].out_ports['+str(p)+'];\n')
+	    if options.dump_topology_file:
+	      topo_dump.write('RecvPort '+str(recv_port_id)+' -> R'+str(0)+':'+str(p)+'\n')
+	    if options.gen_graph and options.graph_nodes: # also include the endpoints
+	      dot.write('R'+str(o)+' -> N'+str(recv_port_id)+' [ taillabel = "' + str(p) + '" ];\n')
+	    links.write('recv_ports_info_ifaces['+str(recv_port_id)+'] =  get_port_info_ifc('+str(recv_port_id)+');\n')
+	    recv_port_id += 1;
 
     link_id = -1
     cur_rt = 0;
@@ -1773,9 +1764,9 @@ def gen_uni_tree_links(links, dot_filename, dump_topology_filename):
     for stage in range(num_stages):
 
       for r in range(rts_in_stage):
-        for l in range(options.uni_tree_fanout):
+	for l in range(options.uni_tree_fanout):
           link_id += 1;
-          dest_rt = options.uni_tree_fanout*cur_rt+l+1;
+	  dest_rt = options.uni_tree_fanout*cur_rt+l+1;
           links.write('links['+str(link_id)+'] <- mkConnectPorts(routers['+str(cur_rt)+'], '+str(l)+', routers['+str(dest_rt)+'], 0);\n')
           if options.dump_topology_file: topo_dump.write('RouterLink '+'R'+str(cur_rt)+':'+str(l)+' -> '+'R'+str(dest_rt)+':'+str(0)+'\n')
           if options.gen_graph: dot.write('R'+str(cur_rt)+' -> R'+str(dest_rt)+' [ taillabel = "' + str(l) + '", headlabel = "' + '0' + '" ];\n')
@@ -1787,55 +1778,55 @@ def gen_uni_tree_links(links, dot_filename, dump_topology_filename):
     num_root_nodes = options.uni_tree_outputs
     num_leaf_nodes = options.uni_tree_inputs
     num_stages = int(math.ceil(math.log(num_leaf_nodes, options.uni_tree_fanout))) - 1  # counts link stages
-    print("num_stages ",num_stages)
+    print "num_stages ",num_stages
     # Expose user send/receive ports
     for o in range(options.uni_tree_outputs):
       links.write('recv_ports_ifaces['+str(o)+'] = routers[0].out_ports['+str(o)+'];\n')
       if options.dump_topology_file:
-        topo_dump.write('RecvPort '+str(o)+' -> R'+str(0)+':'+str(o)+'\n')
+	topo_dump.write('RecvPort '+str(o)+' -> R'+str(0)+':'+str(o)+'\n')
       if options.gen_graph and options.graph_nodes: # also include the endpoints
-        dot.write('R'+str(0)+' -> N'+str(o)+' [ taillabel = "' + str(o) + '" ];\n')
+	dot.write('R'+str(0)+' -> N'+str(o)+' [ taillabel = "' + str(o) + '" ];\n')
       links.write('recv_ports_info_ifaces['+str(o)+'] =  get_port_info_ifc('+str(o)+');\n')
     # Find first and last router id of last stage where nodes attach
     final_stage_rt_first_id = 0
     for i in range(num_stages):
       final_stage_rt_first_id += options.uni_tree_fanout**i
-    print("final_stage_rt_first_id ", final_stage_rt_first_id)
+    print "final_stage_rt_first_id ", final_stage_rt_first_id
     final_stage_rt_last_id = final_stage_rt_first_id * options.uni_tree_fanout
-    print("final_stage_rt_first_id ", final_stage_rt_last_id)
+    print "final_stage_rt_first_id ", final_stage_rt_last_id
 
 
     num_final_stage_rts = (final_stage_rt_last_id+1) - final_stage_rt_first_id;
     if(options.uni_tree_distribute_leaves): 
       for send_port_id in range(options.uni_tree_inputs):
-        o = final_stage_rt_first_id + get_uni_tree_distributed_rt(send_port_id, num_stages, options.uni_tree_fanout);
-        p = send_port_id/(options.uni_tree_fanout**num_stages)
-        links.write('send_ports_ifaces['+str(send_port_id)+'] = routers['+str(o)+'].in_ports['+str(p)+'];\n')
-        if options.dump_topology_file:
-          topo_dump.write('SendPort '+str(send_port_id)+' -> R'+str(o)+':'+str(p)+'\n')
-        if options.gen_graph and options.graph_nodes: # also include the endpoints
-          dot.write('N'+str(send_port_id+options.uni_tree_outputs)+' -> R'+str(o)+' [ headlabel = "' + str(p) + '" ];\n')
-        send_port_id += 1;
+	o = final_stage_rt_first_id + get_uni_tree_distributed_rt(send_port_id, num_stages, options.uni_tree_fanout);
+	p = send_port_id/(options.uni_tree_fanout**num_stages)
+	links.write('send_ports_ifaces['+str(send_port_id)+'] = routers['+str(o)+'].in_ports['+str(p)+'];\n')
+	if options.dump_topology_file:
+	  topo_dump.write('SendPort '+str(send_port_id)+' -> R'+str(o)+':'+str(p)+'\n')
+	if options.gen_graph and options.graph_nodes: # also include the endpoints
+	  dot.write('N'+str(send_port_id+options.uni_tree_outputs)+' -> R'+str(o)+' [ headlabel = "' + str(p) + '" ];\n')
+	send_port_id += 1;
     else:
       send_port_id = 0;
       for o in range(final_stage_rt_first_id, final_stage_rt_last_id+1):
-        for p in range(options.uni_tree_fanout):
-          if(send_port_id < options.uni_tree_inputs): # Stop once you've created enough input ports, even if the tree has more outputs
-            links.write('send_ports_ifaces['+str(send_port_id)+'] = routers['+str(o)+'].in_ports['+str(p)+'];\n')
-            if options.dump_topology_file:
-              topo_dump.write('SendPort '+str(send_port_id)+' -> R'+str(o)+':'+str(p)+'\n')
-            if options.gen_graph and options.graph_nodes: # also include the endpoints
-              dot.write('N'+str(send_port_id+options.uni_tree_outputs)+' -> R'+str(o)+' [ headlabel = "' + str(p) + '" ];\n')
-            send_port_id += 1;
+	for p in range(options.uni_tree_fanout):
+	  if(send_port_id < options.uni_tree_inputs): # Stop once you've created enough input ports, even if the tree has more outputs
+	    links.write('send_ports_ifaces['+str(send_port_id)+'] = routers['+str(o)+'].in_ports['+str(p)+'];\n')
+	    if options.dump_topology_file:
+	      topo_dump.write('SendPort '+str(send_port_id)+' -> R'+str(o)+':'+str(p)+'\n')
+	    if options.gen_graph and options.graph_nodes: # also include the endpoints
+	      dot.write('N'+str(send_port_id+options.uni_tree_outputs)+' -> R'+str(o)+' [ headlabel = "' + str(p) + '" ];\n')
+	    send_port_id += 1;
 
     link_id = -1
     cur_rt = 0;
     rts_in_stage = 1;
     for stage in range(num_stages):
       for r in range(rts_in_stage):
-        for l in range(options.uni_tree_fanout):
+	for l in range(options.uni_tree_fanout):
           link_id += 1;
-          src_rt = options.uni_tree_fanout*cur_rt+l+1;
+	  src_rt = options.uni_tree_fanout*cur_rt+l+1;
           links.write('links['+str(link_id)+'] <- mkConnectPorts(routers['+str(src_rt)+'], 0, routers['+str(cur_rt)+'], '+str(l)+');\n')
           if options.dump_topology_file: topo_dump.write('RouterLink '+'R'+str(src_rt)+':'+str(0)+' -> '+'R'+str(cur_rt)+':'+str(l)+'\n')
           if options.gen_graph: dot.write('R'+str(src_rt)+' -> R'+str(cur_rt)+' [ taillabel = "' + '0' + '", headlabel = "' + str(l) + '" ];\n')
@@ -1844,10 +1835,10 @@ def gen_uni_tree_links(links, dot_filename, dump_topology_filename):
 
   # Close topology dump file
   if options.dump_topology_file: topo_dump.close();
-  if options.verbose and options.dump_topology_file: print('Dumped topology file: ' + dump_topology_filename)
+  if options.verbose and options.dump_topology_file: print 'Dumped topology file: ' + dump_topology_filename
   # Close graphviz file
   if options.gen_graph: dot.write('}\n'); dot.close();
-  if options.verbose and options.gen_graph: print('Generated graphviz file: ' + dot_filename + ".gv")
+  if options.verbose and options.gen_graph: print 'Generated graphviz file: ' + dot_filename + ".gv"
   
   return link_id+1
 
@@ -1859,7 +1850,7 @@ def gen_uni_tree_routing(file_prefix, dump_routing_filename):
   # Dump routing file
   if options.dump_routing_file:
     try: route_dump = open(dump_routing_filename, 'w');
-    except IOError: print("Could not open file " + dump_routing_filename); sys.exit(-1);
+    except IOError: print "Could not open file " + dump_routing_filename; sys.exit(-1);
 
   num_root_nodes = 0;
   num_leaf_nodes = 0;
@@ -1879,58 +1870,56 @@ def gen_uni_tree_routing(file_prefix, dump_routing_filename):
     num_root_nodes = options.uni_tree_inputs
     num_leaf_nodes = options.uni_tree_outputs
     num_stages = int(math.ceil(math.log(num_leaf_nodes, options.uni_tree_fanout))) - 1  # counts link stages
-    print("num_stages ",num_stages)
+    print "num_stages ",num_stages
     
     cur_rt = 0;
     rts_in_stage = 1;
     for stage in range(num_stages+1):
       for r in range(rts_in_stage):
-        filename = options.output_dir + '/' + file_prefix + str(cur_rt) + '.hex'
-        try: rt = open(filename, 'w');
-        except IOError: 
-          print("Could not open file " + filename); sys.exit(-1);
+	filename = options.output_dir + '/' + file_prefix + str(cur_rt) + '.hex'
+	try: rt = open(filename, 'w');
+	except IOError: print "Could not open file " + filename; sys.exit(-1);
 
-        for dst in range(options.uni_tree_outputs):
+	for dst in range(options.uni_tree_outputs):
           if(options.uni_tree_distribute_leaves):  #distribute leaves
-            out_port = dst / ( options.uni_tree_fanout**(stage) ) % options.uni_tree_fanout
-          else:
-            out_port = dst / ( options.uni_tree_fanout**(num_stages-stage) ) % options.uni_tree_fanout
-          rt.write('%x\n' % out_port );
-          if options.verbose: print('route:'+str(cur_rt)+'->'+str(dst)+':'+ str(out_port))
+	    out_port = dst / ( options.uni_tree_fanout**(stage) ) % options.uni_tree_fanout
+	  else:
+	    out_port = dst / ( options.uni_tree_fanout**(num_stages-stage) ) % options.uni_tree_fanout
+	  rt.write('%x\n' % out_port );
+	  if options.verbose: print 'route:'+str(cur_rt)+'->'+str(dst)+':'+ str(out_port)
           if options.dump_routing_file: route_dump.write('R'+str(cur_rt)+': '+str(dst)+' -> '+str(out_port)+'\n');
         cur_rt += 1;
-        rt.close();
-        if options.verbose: print('Generated routing file: ' + filename)
+	rt.close();
+	if options.verbose: print 'Generated routing file: ' + filename
       rts_in_stage *= options.uni_tree_fanout;
   else: # Build up tree
     num_root_nodes = options.uni_tree_outputs
     num_leaf_nodes = options.uni_tree_inputs
     num_stages = int(math.ceil(math.log(num_leaf_nodes, options.uni_tree_fanout))) - 1  # counts link stages
-    print("num_stages ",num_stages)
+    print "num_stages ",num_stages
     
     cur_rt = 0;
     rts_in_stage = 1;
     for stage in range(num_stages+1):
       for r in range(rts_in_stage):
-        filename = options.output_dir + '/' + file_prefix + str(cur_rt) + '.hex'
-        try: rt = open(filename, 'w');
-        except IOError: 
-          print("Could not open file " + filename); sys.exit(-1);
+	filename = options.output_dir + '/' + file_prefix + str(cur_rt) + '.hex'
+	try: rt = open(filename, 'w');
+	except IOError: print "Could not open file " + filename; sys.exit(-1);
 
         if(stage == 0):  # root router
-          for dst in range(options.uni_tree_outputs):
-            rt.write('%x\n' % dst );
-            if options.verbose: print('route:'+str(cur_rt)+'->'+str(dst)+':'+ str(dst))
+	  for dst in range(options.uni_tree_outputs):
+	    rt.write('%x\n' % dst );
+	    if options.verbose: print 'route:'+str(cur_rt)+'->'+str(dst)+':'+ str(dst)
             if options.dump_routing_file: route_dump.write('R'+str(cur_rt)+': '+str(dst)+' -> '+str(dst)+'\n');
-        else:
-          for dst in range(options.uni_tree_outputs):
-            rt.write('%x\n' % 0 );
-            if options.verbose: print('route:'+str(cur_rt)+'->'+str(dst)+':'+ str(0))
+	else:
+	  for dst in range(options.uni_tree_outputs):
+	    rt.write('%x\n' % 0 );
+	    if options.verbose: print 'route:'+str(cur_rt)+'->'+str(dst)+':'+ str(0)
             if options.dump_routing_file: route_dump.write('R'+str(cur_rt)+': '+str(dst)+' -> '+str(0)+'\n');
 
         cur_rt += 1;
-        rt.close();
-        if options.verbose: print('Generated routing file: ' + filename)
+	rt.close();
+	if options.verbose: print 'Generated routing file: ' + filename
       rts_in_stage *= options.uni_tree_fanout;
 
   # Hack - set num_routers to actual number of routers
@@ -1942,7 +1931,7 @@ def gen_uni_tree_routing(file_prefix, dump_routing_filename):
 
   # Close routing dump file
   if options.dump_routing_file: route_dump.close();
-  if options.verbose and options.dump_routing_file: print('Dumped routing file: ' + dump_routing_filename)
+  if options.verbose and options.dump_routing_file: print 'Dumped routing file: ' + dump_routing_filename
 
 
 #######################################
@@ -1954,7 +1943,7 @@ def gen_xbar_links(links, dot_filename, dump_topology_filename):
   # Dump topology file
   if options.dump_topology_file:
     try: topo_dump = open(dump_topology_filename, 'w');
-    except IOError: print("Could not open file " + dump_topology_filename); sys.exit(-1);
+    except IOError: print "Could not open file " + dump_topology_filename; sys.exit(-1);
   # Generate graphviz .gv file
   if options.gen_graph: dot = prepare_graph_file(dot_filename + ".gv", "circo");
  
@@ -1968,10 +1957,10 @@ def gen_xbar_links(links, dot_filename, dump_topology_filename):
   
   # Close topology dump file
   if options.dump_topology_file: topo_dump.close();
-  if options.verbose and options.dump_topology_file: print('Dumped topology file: ' + dump_topology_filename)
+  if options.verbose and options.dump_topology_file: print 'Dumped topology file: ' + dump_topology_filename
   # Close graphviz file
   if options.gen_graph: dot.write('}\n'); dot.close();
-  if options.verbose and options.gen_graph: print('Generated graphviz file: ' + dot_filename + ".gv")
+  if options.verbose and options.gen_graph: print 'Generated graphviz file: ' + dot_filename + ".gv"
   
   return link_id
 
@@ -1982,34 +1971,34 @@ def gen_xbar_routing(file_prefix, dump_routing_filename):
   # Dump routing file
   if options.dump_routing_file:
     try: route_dump = open(dump_routing_filename, 'w');
-    except IOError: print("Could not open file " + dump_routing_filename); sys.exit(-1);
+    except IOError: print "Could not open file " + dump_routing_filename; sys.exit(-1);
 
   for src in range(options.num_routers):
     filename = options.output_dir + '/' + file_prefix + str(src) + '.hex'
     try:
       rt = open(filename, 'w')
     except IOError:
-      print("Could not open file " + filename)
+      print "Could not open file " + filename
       sys.exit(-1)
 
     for dst in range(options.num_routers):
       if src == dst:  # packet is destined to me, extract from router, i.e. out_port 0
-        rt.write('%x\n' % (0) );
-        #str.format(  );
-        if options.verbose: print('route:'+str(src)+'->'+str(dst)+':'+'0')
+	rt.write('%x\n' % (0) );
+	#str.format(  );
+        if options.verbose: print 'route:'+str(src)+'->'+str(dst)+':'+'0'
         if options.dump_routing_file: route_dump.write('R'+str(src)+': '+str(dst)+' -> '+str(0)+'\n');
       else:           # packet is not for me, send to next router, i.e. out_port 1
         #next_router = (src+1)%options.num_routers;
-        rt.write('%x\n' % (1) );
-        if options.verbose: print('route:'+str(src)+'->'+str(dst)+':'+'1')
+	rt.write('%x\n' % (1) );
+        if options.verbose: print 'route:'+str(src)+'->'+str(dst)+':'+'1'
         if options.dump_routing_file: route_dump.write('R'+str(src)+': '+str(dst)+' -> '+str(1)+'\n');
   
     rt.close();
-    if options.verbose: print('Generated routing file: ' + filename)
+    if options.verbose: print 'Generated routing file: ' + filename
   
   # Close routing dump file
   if options.dump_routing_file: route_dump.close();
-  if options.verbose and options.dump_routing_file: print('Dumped routing file: ' + dump_routing_filename)
+  if options.verbose and options.dump_routing_file: print 'Dumped routing file: ' + dump_routing_filename
 
 
 #######################################
@@ -2021,7 +2010,7 @@ def gen_ideal_links(links, dot_filename, dump_topology_filename):
   # Dump topology file
   if options.dump_topology_file:
     try: topo_dump = open(dump_topology_filename, 'w');
-    except IOError: print("Could not open file " + dump_topology_filename); sys.exit(-1);
+    except IOError: print "Could not open file " + dump_topology_filename; sys.exit(-1);
   # Generate graphviz .gv file
   if options.gen_graph: dot = prepare_graph_file(dot_filename + ".gv", "circo");
  
@@ -2035,10 +2024,10 @@ def gen_ideal_links(links, dot_filename, dump_topology_filename):
   
   # Close topology dump file
   if options.dump_topology_file: topo_dump.close();
-  if options.verbose and options.dump_topology_file: print('Dumped topology file: ' + dump_topology_filename)
+  if options.verbose and options.dump_topology_file: print 'Dumped topology file: ' + dump_topology_filename
   # Close graphviz file
   if options.gen_graph: dot.write('}\n'); dot.close();
-  if options.verbose and options.gen_graph: print('Generated graphviz file: ' + dot_filename + ".gv")
+  if options.verbose and options.gen_graph: print 'Generated graphviz file: ' + dot_filename + ".gv"
   
   return link_id
 
@@ -2049,7 +2038,7 @@ def gen_ideal_routing(file_prefix, dump_routing_filename):
   # Dump routing file
   if options.dump_routing_file:
     try: route_dump = open(dump_routing_filename, 'w');
-    except IOError: print("Could not open file " + dump_routing_filename); sys.exit(-1);
+    except IOError: print "Could not open file " + dump_routing_filename; sys.exit(-1);
 
   link_id = -1;
   for src in range(options.num_routers):
@@ -2057,27 +2046,27 @@ def gen_ideal_routing(file_prefix, dump_routing_filename):
     try:
       rt = open(filename, 'w')
     except IOError:
-      print("Could not open file " + filename)
+      print "Could not open file " + filename
       sys.exit(-1)
 
     for dst in range(options.num_routers):
       if src == dst:  # packet is destined to me, extract from router, i.e. out_port 0
-        rt.write('%x\n' % (0) );
-        #str.format(  );
-        if options.verbose: print('route:'+str(src)+'->'+str(dst)+':'+'0')
+	rt.write('%x\n' % (0) );
+	#str.format(  );
+        if options.verbose: print 'route:'+str(src)+'->'+str(dst)+':'+'0'
         if options.dump_routing_file: route_dump.write('R'+str(src)+': '+str(dst)+' -> '+str(0)+'\n');
       else:           # packet is not for me, send to next router, i.e. out_port 1
         #next_router = (src+1)%options.num_routers;
-        rt.write('%x\n' % (1) );
-        if options.verbose: print('route:'+str(src)+'->'+str(dst)+':'+'1')
+	rt.write('%x\n' % (1) );
+        if options.verbose: print 'route:'+str(src)+'->'+str(dst)+':'+'1'
         if options.dump_routing_file: route_dump.write('R'+str(src)+': '+str(dst)+' -> '+str(1)+'\n');
   
     rt.close();
-    if options.verbose: print('Generated routing file: ' + filename)
+    if options.verbose: print 'Generated routing file: ' + filename
 
   # Close routing dump file
   if options.dump_routing_file: route_dump.close();
-  if options.verbose and options.dump_routing_file: print('Dumped routing file: ' + dump_routing_filename)
+  if options.verbose and options.dump_routing_file: print 'Dumped routing file: ' + dump_routing_filename
  
 
 ############################################################
@@ -2087,8 +2076,7 @@ def parse_custom_topology(custom_topology_file, send_ports, recv_ports, router_l
   global options, args
   reverse_router_links = dict()
   try: c_topology = open(options.custom_topology, 'r');
-  except IOError: 
-    print("Could not open custom topology file " + options.custom_topology); sys.exit(-1);
+  except IOError: print "Could not open custom topology file " + options.custom_topology; sys.exit(-1);
 
   for i, l in enumerate(c_topology):
     m = re.match('\s*$', l) # only whitespace until end of likne, i.e. empty line
@@ -2106,7 +2094,7 @@ def parse_custom_topology(custom_topology_file, send_ports, recv_ports, router_l
       rt = m.group('rt');
       port = m.group('port');
       #if options.verbose: print 'Attaching Send Port %s to R%s:%s' % (m.group(1), m.group(2), m.group(3))
-      if options.verbose: print('Attaching Send Port %s to R%s:%s' % (send_port, rt, port))
+      if options.verbose: print 'Attaching Send Port %s to R%s:%s' % (send_port, rt, port)
       #send_ports[m.group(1)] = [ m.group(2), m.group(3) ]
       send_ports[send_port] = [rt, port]
       #if options.verbose: print 'Attaching Send Port ',m.group(1),' to R',m.group(2),':',m.group(3) 
@@ -2123,7 +2111,7 @@ def parse_custom_topology(custom_topology_file, send_ports, recv_ports, router_l
       rt = m.group('rt');
       port = m.group('port');
       #if options.verbose: print 'Attaching Recv Port %s to R%s:%s' % (m.group(1), m.group(2), m.group(3))
-      if options.verbose: print('Attaching Recv Port %s to R%s:%s' % (recv_port, rt, port))
+      if options.verbose: print 'Attaching Recv Port %s to R%s:%s' % (recv_port, rt, port)
       #recv_ports[m.group(1)] = [ m.group(2), m.group(3) ]
       recv_ports[recv_port] = [rt, port]
       
@@ -2138,9 +2126,9 @@ def parse_custom_topology(custom_topology_file, send_ports, recv_ports, router_l
       rt = m.group('rt');
       port = m.group('port');
       #if options.verbose: print 'Attaching Send Port %s to R%s:%s' % (m.group(1), m.group(2), m.group(3))
-      if options.verbose: print('Attaching Send Port %s to R%s:%s' % (user_port, rt, port))
+      if options.verbose: print 'Attaching Send Port %s to R%s:%s' % (user_port, rt, port)
       send_ports[user_port] = [rt, port]
-      if options.verbose: print('Attaching Recv Port %s to R%s:%s' % (user_port, rt, port))
+      if options.verbose: print 'Attaching Recv Port %s to R%s:%s' % (user_port, rt, port)
       recv_ports[user_port] = [rt, port]
       #send_ports[m.group(1)] = [ m.group(2), m.group(3) ]
       #if options.verbose: print 'Attaching Send Port ',m.group(1),' to R',m.group(2),':',m.group(3) 
@@ -2158,13 +2146,13 @@ def parse_custom_topology(custom_topology_file, send_ports, recv_ports, router_l
       dst_rt = m.group('dst_rt');
       dst_port = m.group('dst_port');
       #if options.verbose: print 'Connecting R%s:%s to R%s:%s' % (m.group(1), m.group(2), m.group(3), m.group(4))
-      if options.verbose: print('Connecting R%s:%s to R%s:%s' % (src_rt, src_port, dst_rt, dst_port))
+      if options.verbose: print 'Connecting R%s:%s to R%s:%s' % (src_rt, src_port, dst_rt, dst_port)
       if(src_rt not in router_links): router_links[src_rt] = dict();
       # check if connection already exists
       if(src_port in router_links[src_rt]): # Overwriting connections
-        exist_dest = router_links[src_rt][src_port]
-        #print 'Warning: R%s:%s was already connected to R%s:%s, but will now be connected to R%s:R%s' % (m.group(1), m.group(2), exist_dest[0], exist_dest[1], m.group(3), m.group(4))
-        print('Warning: R%s:%s was already connected to R%s:%s, but will now be connected to R%s:R%s' % (src_rt, src_port, exist_dest[0], exist_dest[1], dst_rt, dst_port))
+	exist_dest = router_links[src_rt][src_port]
+	#print 'Warning: R%s:%s was already connected to R%s:%s, but will now be connected to R%s:R%s' % (m.group(1), m.group(2), exist_dest[0], exist_dest[1], m.group(3), m.group(4))
+	print 'Warning: R%s:%s was already connected to R%s:%s, but will now be connected to R%s:R%s' % (src_rt, src_port, exist_dest[0], exist_dest[1], dst_rt, dst_port)
 
       # Add link
       #router_links[m.group(1)][m.group(2)] = [ m.group(3), m.group(4) ]
@@ -2181,38 +2169,38 @@ def parse_custom_topology(custom_topology_file, send_ports, recv_ports, router_l
       reverse_router_links[dst_rt][dst_port] = [ src_rt, src_port ]
 
       continue
-    print('Error parsing custom_topology_file (%s) at line %d: "%s"' % (custom_topology_file, i, l[:-1]))
+    print 'Error parsing custom_topology_file (%s) at line %d: "%s"' % (custom_topology_file, i, l[:-1])
     sys.exit(-1);
 
   # Sanity checks
   for r in range(topology_info['num_routers']):
     if( ( str(r) not in router_links ) and ( str(r) not in reverse_router_links ) ): # A router that is unconnected
-      print('Error: Missing topology info for router %d. Router IDs must be consecutive.' % (r))
+      print 'Error: Missing topology info for router %d. Router IDs must be consecutive.' % (r)
       sys.exit(-1);
 
   for s in range(topology_info['max_send_ports']):
     if( str(s) not in send_ports ): # A non-existent send port
-      print('Error: Missing topology info for send port %d. Send port IDs must be consecutive.' % (s))
+      print 'Error: Missing topology info for send port %d. Send port IDs must be consecutive.' % (s)
       sys.exit(-1);
 
   for r in range(topology_info['max_recv_ports']):
     if( str(r) not in recv_ports ): # A non-existent recv port
-      print('Error: Missing topology info for recv port %d. Recv port IDs must be consecutive.' % (r))
+      print 'Error: Missing topology info for recv port %d. Recv port IDs must be consecutive.' % (r)
       sys.exit(-1);
 
   if(int(topology_info['max_send_ports']) < 1):
-      print('Error: No send ports! A network requires at least one send port.')
+      print 'Error: No send ports! A network requires at least one send port.'
       sys.exit(-1);
   
   if(int(topology_info['max_recv_ports']) < 1):
-      print('Error: No receive ports! A network requires at least one receive port.')
+      print 'Error: No receive ports! A network requires at least one receive port.'
       sys.exit(-1);
 
-  if options.verbose: print('Total number of routers:', topology_info['num_routers'])
-  if options.verbose: print('Max number of in ports:', topology_info['max_num_in_ports'])
-  if options.verbose: print('Max number of out ports:', topology_info['max_num_out_ports'])
-  if options.verbose: print('Max number of send ports:', topology_info['max_send_ports'])
-  if options.verbose: print('Max number of recv ports:', topology_info['max_recv_ports'])
+  if options.verbose: print 'Total number of routers:', topology_info['num_routers']
+  if options.verbose: print 'Max number of in ports:', topology_info['max_num_in_ports']
+  if options.verbose: print 'Max number of out ports:', topology_info['max_num_out_ports']
+  if options.verbose: print 'Max number of send ports:', topology_info['max_send_ports']
+  if options.verbose: print 'Max number of recv ports:', topology_info['max_recv_ports']
 
 
 
@@ -2222,8 +2210,7 @@ def parse_custom_routing(custom_routing_file, topology_info):
   """Parses custom routing file"""
   global options, args
   try: c_routing = open(custom_routing_file, 'r');
-  except IOError: 
-    print("Could not open custom routing file " + options.custom_routing); sys.exit(-1);
+  except IOError: print "Could not open custom routing file " + options.custom_routing; sys.exit(-1);
   
   # Initialize routing tables
   # routing = int(topology_info['num_routers']) * [int(topology_info['max_dests']) * [-1] ] # This does not work! Routing entries are aliases and overwrite each other
@@ -2246,30 +2233,25 @@ def parse_custom_routing(custom_routing_file, topology_info):
       rt = m.group('rt');
       dst = m.group('dst');
       port = m.group('port');
-      if(int(rt) >= topology_info['num_routers']): 
-        print('Routing entry for non-existent router %s at line %d: "%s"' % (rt, i, l[:-1])); sys.exit(-1)
-      if(int(dst) >= topology_info['max_dests']): 
-        print('Routing entry for router %s has non-existent destination (%s) at line %d: "%s"' % (rt, dst, i, l[:-1])); sys.exit(-1)
-      if(int(port) >= topology_info['max_num_out_ports']): 
-        print('Routing entry for router %s has non-existent out port (%s) at line %d: "%s"' % (rt, port, i, l[:-1])); sys.exit(-1)
+      if(int(rt) >= topology_info['num_routers']): print 'Routing entry for non-existent router %s at line %d: "%s"' % (rt, i, l[:-1]); sys.exit(-1)
+      if(int(dst) >= topology_info['max_dests']): print 'Routing entry for router %s has non-existent destination (%s) at line %d: "%s"' % (rt, dst, i, l[:-1]); sys.exit(-1)
+      if(int(port) >= topology_info['max_num_out_ports']): print 'Routing entry for router %s has non-existent out port (%s) at line %d: "%s"' % (rt, port, i, l[:-1]); sys.exit(-1)
       
-      if( routing[int(rt)][int(dst)] != -1 ): 
-        print('Warning: Overwriting previous routing entry (R%s:%s->%d) with new routing entry (R%s:%s->%s)' % ( rt, dst, routing[int(rt)][int(dst)], rt, dst, port))
+      if( routing[int(rt)][int(dst)] != -1 ): print 'Warning: Overwriting previous routing entry (R%s:%s->%d) with new routing entry (R%s:%s->%s)' % ( rt, dst, routing[int(rt)][int(dst)], rt, dst, port)
       #if options.verbose: print 'Attaching Send Port %s to R%s:%s' % (m.group(1), m.group(2), m.group(3))
-      if options.verbose: 
-        print('New routing entry for router %s: dst:%s -> out_port:%s' % (rt, dst, port))
+      if options.verbose: print 'New routing entry for router %s: dst:%s -> out_port:%s' % (rt, dst, port)
       routing[int(rt)][int(dst)] = int(port)
 
       continue
-    print('Error parsing routing_topology_file (%s) at line %d: "%s"' % (routing_topology_file, i, l[:-1]))
+    print 'Error parsing routing_topology_file (%s) at line %d: "%s"' % (routing_topology_file, i, l[:-1])
     sys.exit(-1);
 
   # Sanity check
   for r in range(len(routing)):
     for dst in range(len(routing[r])):
       if(routing[r][dst] == -1):
-        print('Warning: Router %d has undefined output port for packets with destination %d. Will use default output port (0).' % (r, dst))
-        routing[r][dst] = 0
+	print 'Warning: Router %d has undefined output port for packets with destination %d. Will use default output port (0).' % (r, dst)
+	routing[r][dst] = 0
 
   return routing
 
@@ -2283,10 +2265,10 @@ def gen_custom_links(send_ports, recv_ports, router_links, topology_info, links,
   if options.gen_graph: dot = prepare_graph_file(dot_filename + ".gv", "circo", topology_info);
 
 # Expose user send/receive and info ports
-  for s, rp in list(send_ports.items()):
+  for s, rp in send_ports.items():
     links.write('send_ports_ifaces['+s+'] = routers['+rp[0]+'].in_ports['+rp[1]+'];\n')
     if options.graph_nodes: dot.write('N'+s+' -> R'+rp[0]+' [ headlabel = "' + rp[1] + '" ];\n')
-  for r, rp in list(recv_ports.items()):
+  for r, rp in recv_ports.items():
     links.write('recv_ports_ifaces['+r+'] = routers['+rp[0]+'].out_ports['+rp[1]+'];\n')
     if options.graph_nodes: dot.write('R'+rp[0]+' -> N'+r+' [ taillabel = "' + rp[1] + '" ];\n')
     links.write('recv_ports_info_ifaces['+r+'] =  get_port_info_ifc('+r+');\n')
@@ -2295,8 +2277,8 @@ def gen_custom_links(send_ports, recv_ports, router_links, topology_info, links,
   #  links.write('router_info_ifaces['+str(r)+'] =  get_router_info_ifc('+str(r)+');\n')
   
   link_id = 0;
-  for src_rt in list(router_links.keys()):
-    for src_port in list(router_links[src_rt].keys()):
+  for src_rt in router_links.keys():
+    for src_port in router_links[src_rt].keys():
       tmp = router_links[src_rt][src_port]
       dst_rt = tmp[0]
       dst_port = tmp[1]
@@ -2306,7 +2288,7 @@ def gen_custom_links(send_ports, recv_ports, router_links, topology_info, links,
   
   # Close graphviz file
   if options.gen_graph: dot.write('}\n'); dot.close();
-  if options.verbose and options.gen_graph: print('Generated graphviz file: ' + dot_filename + ".gv")
+  if options.verbose and options.gen_graph: print 'Generated graphviz file: ' + dot_filename + ".gv"
   
   return link_id
 
@@ -2316,16 +2298,15 @@ def gen_custom_routing(routing, topology_info, file_prefix):
   for src in range(options.num_routers):
     filename = options.output_dir + '/' + file_prefix + str(src) + '.hex'
     try: rt = open(filename, 'w');
-    except IOError: 
-      print("Could not open file " + filename); sys.exit(-1);
+    except IOError: print "Could not open file " + filename; sys.exit(-1);
 
     for dst in range(int(topology_info['max_dests'])):
       out_port = routing[src][dst]
       rt.write('%x\n' % (out_port) );
-      if options.verbose: print('route:'+str(src)+'->'+str(dst)+':'+str(out_port))
+      if options.verbose: print 'route:'+str(src)+'->'+str(dst)+':'+str(out_port)
   
     rt.close();
-    if options.verbose: print('Generated routing file: ' + filename)
+    if options.verbose: print 'Generated routing file: ' + filename
 
 
 
@@ -2338,7 +2319,7 @@ def gen_net_parameters(num_user_send_ports, num_user_recv_ports, num_in_ports, n
   try:
     parameters = open(filename, 'w')
   except IOError:
-    print("Could not open file " + filename)
+    print "Could not open file " + filename
     sys.exit(-1)
 
   #parameters.write('`define NUM_TOTAL_USER_PORTS ' + str(num_total_user_ports) + '\n')
@@ -2379,7 +2360,7 @@ def gen_net_parameters(num_user_send_ports, num_user_recv_ports, num_in_ports, n
   else:
     parameters.write('`define PIPELINE_LINKS False\n')
 
-  if options.verbose: print('Generated parameters file: ' + filename)
+  if options.verbose: print 'Generated parameters file: ' + filename
 
 ############################################################
 ## main
@@ -2393,10 +2374,10 @@ def main ():
     #  print arg;
 
     if options.verbose: 
-      print('================ Options ================')
+      print '================ Options ================'
       options_dict = vars(options)
       for o in options_dict:
-        print(o,':',options_dict[o])
+        print o,':',options_dict[o]
 
     #num_total_user_ports = options.num_routers
     num_user_send_ports = options.num_routers
@@ -2422,16 +2403,16 @@ def main ():
     #### Global Checks for all topologies ####
     if (options.router_type == "voq"):
       if (not (options.flow_control_type == "peek")):
-        print('Warning: VOQ routers require the use of "peek" flow control. Setting flow control to "peek".')
-        options.flow_control_type = True;
+        print 'Warning: VOQ routers require the use of "peek" flow control. Setting flow control to "peek".'
+	options.flow_control_type = True;
       if (options.num_vcs > 1):
-        print('Warning: VOQ routers do not support multiple Virtual Channels (VCs). Setting num_vcs to 1.')
-        options.num_vcs = 1;
+        print 'Warning: VOQ routers do not support multiple Virtual Channels (VCs). Setting num_vcs to 1.'
+	options.num_vcs = 1;
 
     else:  # VC-based routers
       if (options.num_vcs == 1):
-        print('Warning: VC-based routers require at least two Virtual Channels (VCs). Setting num_vcs to 2.')
-        options.num_vcs = 2;
+        print 'Warning: VC-based routers require at least two Virtual Channels (VCs). Setting num_vcs to 2.'
+	options.num_vcs = 2;
 
     # Prefix for generated files (some topologies might add more fields to this - custom overrides this)
     file_prefix = '';
@@ -2476,8 +2457,8 @@ def main ():
     elif options.topology == 'star':
       # Check if star parameters are valid
       if(options.num_routers > 16):
-        print('Error:',options.topology, 'topology only supports up to 16 routers.')
-        sys.exit(1)
+	print 'Error:',options.topology, 'topology only supports up to 16 routers.'
+	sys.exit(1)
 
       num_user_send_ports = options.num_routers-1
       num_user_recv_ports = options.num_routers-1
@@ -2493,13 +2474,13 @@ def main ():
       num_routers_sqrt = (int)( math.floor(math.sqrt(options.num_routers)) )
       num_routers_is_square = (options.num_routers == num_routers_sqrt**2)
       if(num_routers_is_square and options.routers_per_row == -1 and options.routers_per_column == -1):
-        if options.verbose: print('num_routers(%d) is perfect square; setting options.routers_per_row and options.routers_per_column to sqrt(num_routers) to build square mesh.' % (options.num_routers))
-        options.routers_per_row    = num_routers_sqrt
-        options.routers_per_column = num_routers_sqrt
+        if options.verbose: print 'num_routers(%d) is perfect square; setting options.routers_per_row and options.routers_per_column to sqrt(num_routers) to build square mesh.' % (options.num_routers)
+	options.routers_per_row    = num_routers_sqrt
+	options.routers_per_column = num_routers_sqrt
 
       if(options.routers_per_row * options.routers_per_column != options.num_routers):
-        print('Error:',options.topology, 'topology requires that routers_per_row(%d) and routers_per_column(%d) are specified and that their product is equal to num_routers(%d).' % (options.routers_per_row, options.routers_per_column, options.num_routers))
-        sys.exit(1)
+	print 'Error:',options.topology, 'topology requires that routers_per_row(%d) and routers_per_column(%d) are specified and that their product is equal to num_routers(%d).' % (options.routers_per_row, options.routers_per_column, options.num_routers)
+	sys.exit(1)
 
       # Set topology-specific parameters here
       if(options.expose_unused_ports):
@@ -2520,13 +2501,13 @@ def main ():
       num_routers_sqrt = (int)( math.floor(math.sqrt(options.num_routers)) )
       num_routers_is_square = (options.num_routers == num_routers_sqrt**2)
       if(num_routers_is_square and options.routers_per_row == -1 and options.routers_per_column == -1):
-        if options.verbose: print('num_routers(%d) is perfect square; setting options.routers_per_row and options.routers_per_column to sqrt(num_routers) to build square torus.' % (options.num_routers))
-        options.routers_per_row    = num_routers_sqrt
-        options.routers_per_column = num_routers_sqrt
+        if options.verbose: print 'num_routers(%d) is perfect square; setting options.routers_per_row and options.routers_per_column to sqrt(num_routers) to build square torus.' % (options.num_routers)
+	options.routers_per_row    = num_routers_sqrt
+	options.routers_per_column = num_routers_sqrt
 
       if(options.routers_per_row * options.routers_per_column != options.num_routers):
-        print('Error:',options.topology, 'topology requires that routers_per_row(%d) and routers_per_column(%d) are specified and that their product is equal to num_routers(%d).' % (options.routers_per_row, options.routers_per_column, options.num_routers))
-        sys.exit(1)
+	print 'Error:',options.topology, 'topology requires that routers_per_row(%d) and routers_per_column(%d) are specified and that their product is equal to num_routers(%d).' % (options.routers_per_row, options.routers_per_column, options.num_routers)
+	sys.exit(1)
 
       # Set topology-specific parameters here
       max_num_in_ports = 5
@@ -2540,8 +2521,8 @@ def main ():
     elif options.topology == 'fully_connected':
       # Check if fully-connected parameters are valid
       if(options.num_routers > 16):
-        print('Error:',options.topology, 'topology only supports up to 16 routers.')
-        sys.exit(1)
+	print 'Error:',options.topology, 'topology only supports up to 16 routers.'
+	sys.exit(1)
 
       # Set topology-specific parameters here
       max_num_in_ports = options.num_routers   # central node is connected to num_routers-1 other routers, plus local port
@@ -2554,8 +2535,8 @@ def main ():
       num_routers_sqrt = (int)( math.floor(math.sqrt(options.num_routers)) )
       num_routers_is_square = (options.num_routers == num_routers_sqrt**2)
       if(not num_is_power_of_two):
-        print('Error:',options.topology, 'topology requires that num_routers is a power of two.')
-        sys.exit(1)
+	print 'Error:',options.topology, 'topology requires that num_routers is a power of two.'
+	sys.exit(1)
 
       # Set topology-specific parameters here
       max_num_in_ports = 4   # only fat tree based on 4x4 routers supported for now
@@ -2568,8 +2549,8 @@ def main ():
       num_routers_sqrt = (int)( math.floor(math.sqrt(options.num_routers)) )
       num_routers_is_square = (options.num_routers == num_routers_sqrt**2)
       if(not num_is_power_of_two):
-        print('Error:',options.topology, 'topology requires that num_routers is a power of two.')
-        sys.exit(1)
+	print 'Error:',options.topology, 'topology requires that num_routers is a power of two.'
+	sys.exit(1)
 
       # Set topology-specific parameters here
       max_num_in_ports = 2   # only 2-ary butterfly topology based on 2x2 routers supported for now
@@ -2589,22 +2570,22 @@ def main ():
          
       num_leaf_nodes = options.uni_tree_inputs;
       if(num_leaf_nodes > 512): 
-        print('Error',options.topology, 'topology only supports up to 512 leaf nodes.')
-        sys.exit(1)
+	print 'Error',options.topology, 'topology only supports up to 512 leaf nodes.'
+	sys.exit(1)
 
       if(options.uni_tree_fanout < 2):  #automatically set fanout, default fan_out is 4
-        if(num_leaf_nodes <= 4):
-          options.uni_tree_fanout = num_leaf_nodes
-        elif(num_leaf_nodes <= 16):
-          options.uni_tree_fanout = int(math.ceil(math.pow(num_leaf_nodes, 1.0/2.0)));
-        elif(num_leaf_nodes <= 256):
-          options.uni_tree_fanout = int(math.ceil(math.pow(num_leaf_nodes, 1.0/3.0)));
-        print('Warning',options.topology, 'topology requires that uni_tree_fanout is at least two. Setting uni_tree_fanout to ', options.uni_tree_fanout) 
+	if(num_leaf_nodes <= 4):
+	  options.uni_tree_fanout = num_leaf_nodes
+	elif(num_leaf_nodes <= 16):
+	  options.uni_tree_fanout = int(math.ceil(math.pow(num_leaf_nodes, 1.0/2.0)));
+	elif(num_leaf_nodes <= 256):
+	  options.uni_tree_fanout = int(math.ceil(math.pow(num_leaf_nodes, 1.0/3.0)));
+	print 'Warning',options.topology, 'topology requires that uni_tree_fanout is at least two. Setting uni_tree_fanout to ', options.uni_tree_fanout 
 
       # corner-case for very small uni_tree
       if(options.uni_tree_inputs < options.uni_tree_fanout and options.uni_tree_outputs < options.uni_tree_fanout): 
-        max_in_out =  max(options.uni_tree_inputs, options.uni_tree_outputs);
-        print("Warning: uni_tree topology requires that uni_tree_fanout is not larger than both uni_tree_inputs and uni_tree_outpus.\n  Setting uni_tree_fanout to (",max_in_out,").")
+	max_in_out =  max(options.uni_tree_inputs, options.uni_tree_outputs);
+        print "Warning: uni_tree topology requires that uni_tree_fanout is not larger than both uni_tree_inputs and uni_tree_outpus.\n  Setting uni_tree_fanout to (",max_in_out,")."
         options.uni_tree_fanout = max_in_out;
 
       # Override file_prefix
@@ -2617,8 +2598,8 @@ def main ():
       max_num_out_ports = options.uni_tree_outputs  
 
 #      if(options.uni_tree_inputs < options.uni_tree_outputs): # Build down tree
-#        print 'Error',options.topology, 'topology requires that uni_tree_inputs >= uni_tree_outputs.'
-#        sys.exit(1)
+#	print 'Error',options.topology, 'topology requires that uni_tree_inputs >= uni_tree_outputs.'
+#	sys.exit(1)
 
     #### distribution uni-directional tree ####
     elif options.topology == 'uni_tree_down': 
@@ -2626,22 +2607,22 @@ def main ():
          
       num_leaf_nodes = options.uni_tree_inputs;
       if(num_leaf_nodes > 512): 
-        print('Error',options.topology, 'topology only supports up to 512 leaf nodes.')
-        sys.exit(1)
+	print 'Error',options.topology, 'topology only supports up to 512 leaf nodes.'
+	sys.exit(1)
 
       if(options.uni_tree_fanout < 2):  #automatically set fanout, default fan_out is 4
-        if(num_leaf_nodes <= 4):
-          options.uni_tree_fanout = num_leaf_nodes
-        elif(num_leaf_nodes <= 16):
-          options.uni_tree_fanout = int(math.ceil(math.pow(num_leaf_nodes, 1.0/2.0)));
-        elif(num_leaf_nodes <= 256):
-          options.uni_tree_fanout = int(math.ceil(math.pow(num_leaf_nodes, 1.0/3.0)));
-        print('Warning',options.topology, 'topology requires that uni_tree_fanout is at least two. Setting uni_tree_fanout to ', options.uni_tree_fanout) 
+	if(num_leaf_nodes <= 4):
+	  options.uni_tree_fanout = num_leaf_nodes
+	elif(num_leaf_nodes <= 16):
+	  options.uni_tree_fanout = int(math.ceil(math.pow(num_leaf_nodes, 1.0/2.0)));
+	elif(num_leaf_nodes <= 256):
+	  options.uni_tree_fanout = int(math.ceil(math.pow(num_leaf_nodes, 1.0/3.0)));
+	print 'Warning',options.topology, 'topology requires that uni_tree_fanout is at least two. Setting uni_tree_fanout to ', options.uni_tree_fanout 
 
       # corner-case for very small uni_tree
       if(options.uni_tree_inputs < options.uni_tree_fanout and options.uni_tree_outputs < options.uni_tree_fanout): 
-        max_in_out =  max(options.uni_tree_inputs, options.uni_tree_outputs);
-        print("Warning: uni_tree topology requires that uni_tree_fanout is not larger than both uni_tree_inputs and uni_tree_outpus.\n  Setting uni_tree_fanout to (",max_in_out,").")
+	max_in_out =  max(options.uni_tree_inputs, options.uni_tree_outputs);
+        print "Warning: uni_tree topology requires that uni_tree_fanout is not larger than both uni_tree_inputs and uni_tree_outpus.\n  Setting uni_tree_fanout to (",max_in_out,")."
         options.uni_tree_fanout = max_in_out;
 
       # Override file_prefix
@@ -2654,8 +2635,8 @@ def main ():
       max_num_out_ports = options.uni_tree_fanout 
 
 #      if(options.uni_tree_inputs > options.uni_tree_outputs): # Build down tree
-#        print 'Error',options.topology, 'topology requires that uni_tree_inputs <= uni_tree_outputs.'
-#        sys.exit(1)
+#	print 'Error',options.topology, 'topology requires that uni_tree_inputs <= uni_tree_outputs.'
+#	sys.exit(1)
 
     #### uni-directional tree ####
     elif options.topology == 'uni_tree':
@@ -2666,22 +2647,22 @@ def main ():
       
       num_leaf_nodes = max(options.uni_tree_inputs, options.uni_tree_outputs);
       if(num_leaf_nodes > 512): 
-        print('Error',options.topology, 'topology only supports up to 512 leaf nodes.')
-        sys.exit(1)
+	print 'Error',options.topology, 'topology only supports up to 512 leaf nodes.'
+	sys.exit(1)
 
       if(options.uni_tree_fanout < 2): 
-        if(num_leaf_nodes <= 8):
-          options.uni_tree_fanout = num_leaf_nodes
-        elif(num_leaf_nodes <= 64):
-          options.uni_tree_fanout = int(math.ceil(math.pow(num_leaf_nodes, 1.0/2.0)));
-        elif(num_leaf_nodes <= 512):
-          options.uni_tree_fanout = int(math.ceil(math.pow(num_leaf_nodes, 1.0/3.0)));
-        print('Warning',options.topology, 'topology requires that uni_tree_fanout is at least two. Setting uni_tree_fanout to ', options.uni_tree_fanout) 
+	if(num_leaf_nodes <= 8):
+	  options.uni_tree_fanout = num_leaf_nodes
+	elif(num_leaf_nodes <= 64):
+	  options.uni_tree_fanout = int(math.ceil(math.pow(num_leaf_nodes, 1.0/2.0)));
+	elif(num_leaf_nodes <= 512):
+	  options.uni_tree_fanout = int(math.ceil(math.pow(num_leaf_nodes, 1.0/3.0)));
+	print 'Warning',options.topology, 'topology requires that uni_tree_fanout is at least two. Setting uni_tree_fanout to ', options.uni_tree_fanout 
 
       # corner-case for very small uni_tree
       if(options.uni_tree_inputs < options.uni_tree_fanout and options.uni_tree_outputs < options.uni_tree_fanout): 
-        max_in_out =  max(options.uni_tree_inputs, options.uni_tree_outputs);
-        print("Warning: uni_tree topology requires that uni_tree_fanout is not larger than both uni_tree_inputs and uni_tree_outpus.\n  Setting uni_tree_fanout to (",max_in_out,").")
+	max_in_out =  max(options.uni_tree_inputs, options.uni_tree_outputs);
+        print "Warning: uni_tree topology requires that uni_tree_fanout is not larger than both uni_tree_inputs and uni_tree_outpus.\n  Setting uni_tree_fanout to (",max_in_out,")."
         options.uni_tree_fanout = max_in_out;
 
       # Override file_prefix
@@ -2693,9 +2674,9 @@ def main ():
       if(options.uni_tree_inputs < options.uni_tree_outputs): # Build down tree
         max_num_in_ports = options.uni_tree_inputs   
         max_num_out_ports = options.uni_tree_fanout  
-        #if(options.uni_tree_inputs < options.uni_tree_fanout): # corner-case for very small uni_tree
-        #  print "WARNING: uni_tree topology requires that uni_tree_fanout is >= MIN(uni_tree_inputs, uni_tree_outpus).i
-        #      \  Setting uni_tree_fanout to uni_tree_inputs (",options.uni_tree_inputs,")."
+	#if(options.uni_tree_inputs < options.uni_tree_fanout): # corner-case for very small uni_tree
+	#  print "WARNING: uni_tree topology requires that uni_tree_fanout is >= MIN(uni_tree_inputs, uni_tree_outpus).i
+	#      \  Setting uni_tree_fanout to uni_tree_inputs (",options.uni_tree_inputs,")."
       else:
         max_num_in_ports = options.uni_tree_fanout  
         max_num_out_ports = options.uni_tree_outputs
@@ -2705,21 +2686,19 @@ def main ():
     elif options.topology == 'custom':
       # Check if custom parameters are valid
       if(options.custom_topology == "" or options.custom_routing == ""):
-        print("You must specify a custom topology and custom routing file using the --custom_topology and --custom_routing command-line options!"); sys.exit(-1);
+	print "You must specify a custom topology and custom routing file using the --custom_topology and --custom_routing command-line options!"; sys.exit(-1);
 
       try: c_topology = open(options.custom_topology, 'r');
-      except IOError: 
-        print("Could not open custom topology file " + options.custom_topology); sys.exit(-1);
+      except IOError: print "Could not open custom topology file " + options.custom_topology; sys.exit(-1);
       try: c_routing = open(options.custom_routing, 'r');
-      except IOError: 
-        print("Could not open custom routing file " + options.custom_routing); sys.exit(-1);
+      except IOError: print "Could not open custom routing file " + options.custom_routing; sys.exit(-1);
 
       # Generate a hash based on the custom topology and routing files
       md5gen = hashlib.md5()
       for l in c_topology:
-        md5gen.update(l);
+	md5gen.update(l);
       for l in c_routing:
-        md5gen.update(l);
+	md5gen.update(l);
       hash = md5gen.hexdigest();
       c_topology.close()
       c_routing.close()
@@ -2754,12 +2733,12 @@ def main ():
 
     #### unknown topology ####
     else:
-      print('Unknown topology', options.topology)
+      print 'Unknown topology', options.topology
       sys.exit(1)
 
     # Check if other options are valid
     if(options.expose_unused_ports and options.topology != 'mesh'):
-      print('Warning: Ignoring option --expose_unused_ports, which is only supported for mesh topology')
+      print 'Warning: Ignoring option --expose_unused_ports, which is only supported for mesh topology'
       #sys.exit(1)
 
 
@@ -2769,16 +2748,14 @@ def main ():
     network_links_file = file_prefix+'_links.bsv'
     network_routing_file_prefix = file_prefix+'_routing_'
 
-    if options.verbose: print('\n================ Generating ' + options.topology + ' network ================')
+    if options.verbose: print '\n================ Generating ' + options.topology + ' network ================'
     generate_links_function   = 'gen_'+options.topology+'_links'
     generate_routing_function = 'gen_'+options.topology+'_routing'
     
     # Open links file
     network_links_filename = options.output_dir + '/' + network_links_file
-    try:
-      links = open(network_links_filename, 'w');
-    except IOError: 
-      print("Could not open file " + network_links_filename); sys.exit(-1);
+    try: links = open(network_links_filename, 'w');
+    except IOError: print "Could not open file " + network_links_filename; sys.exit(-1);
     dot_filename = network_links_filename
     dump_topology_filename = file_prefix+'.topology'
     dump_routing_filename = file_prefix+'.routing'
@@ -2791,34 +2768,34 @@ def main ():
       gen_custom_routing(routing, topology_info, network_routing_file_prefix);
   
     links.close(); # close links file
-    if options.verbose: print('Generated links file: ' + network_links_filename)
+    if options.verbose: print 'Generated links file: ' + network_links_filename
 
     gen_net_parameters(num_user_send_ports, num_user_recv_ports, max_num_in_ports, max_num_out_ports, num_links, options.cut, network_parameters_file)
-    print('Generated ' + options.topology + ' network configuration succesfully.')
+    print 'Generated ' + options.topology + ' network configuration succesfully.'
 
     # Generate visulization of network graph
     if options.gen_graph: 
       if (options.graph_layout == "invalid"):  # if user or topology hasn't set this
-        options.graph_layout = "circo";
+	options.graph_layout = "circo";
       command = 'dot -T'+options.graph_format + ' -K' + options.graph_layout + ' ' + options.output_dir + '/' + file_prefix+'_links.bsv.gv -o ' + options.output_dir + '/' + file_prefix+'.'+options.graph_format
       os.system(command)
-      if options.verbose: print('Generated network graph visuzalization file: ' + file_prefix+'.'+options.graph_format)
+      if options.verbose: print 'Generated network graph visuzalization file: ' + file_prefix+'.'+options.graph_format
     
     # Generate RTL and synthesize
     if(options.gen_rtl):
       xtra_flags = ""
       if options.topology == 'ideal':
-        xtra_flags = "-D IDEAL=1 "
+	    xtra_flags = "-D IDEAL=1 "
       if options.topology == 'xbar':
-        xtra_flags = "-D XBAR=1 -D XBAR_LANES="+str(options.xbar_lanes) + " " 
+	    xtra_flags = "-D XBAR=1 -D XBAR_LANES="+str(options.xbar_lanes) + " " 
 
       user_flags = 'USER_FLAGS=\'' + xtra_flags + '-D NETWORK_PARAMETERS_FILE="\\"' + network_parameters_file + '"\\" -D NETWORK_LINKS_FILE="\\"' + network_links_file + '"\\" -D NETWORK_ROUTING_FILE_PREFIX="\\"' + network_routing_file_prefix +'"\\"\''  
       command = 'make net ' + user_flags 
       if (options.flow_control_type == "peek"):
         command = 'make net_simple ' + user_flags 
       
-      print('Compiling Bluespec to Verilog') 
-      if options.verbose: print('Executing command: ' + command)
+      print 'Compiling Bluespec to Verilog' 
+      if options.verbose: print 'Executing command: ' + command
       os.system(command);
 
     if(options.run_xst):
@@ -2828,8 +2805,8 @@ def main ():
       if (options.flow_control_type == "peek"):
         command = 'make net_simple_xst ' + user_flags 
 
-      print('Compiling Bluespec to Verilog and running Xilinx XST for synthesis') 
-      if options.verbose: print('Executing command: ' + command)
+      print 'Compiling Bluespec to Verilog and running Xilinx XST for synthesis' 
+      if options.verbose: print 'Executing command: ' + command
       os.system(command);
 
 
@@ -2840,8 +2817,8 @@ def main ():
       if (options.flow_control_type == "peek"):
         command = 'make net_simple_dc ' + user_flags 
 
-      print('Compiling Bluespec to Verilog and running Synopsys DC for synthesis') 
-      if options.verbose: print('Executing command: ' + command)
+      print 'Compiling Bluespec to Verilog and running Synopsys DC for synthesis' 
+      if options.verbose: print 'Executing command: ' + command
       os.system(command);
 
 
@@ -2858,81 +2835,81 @@ def main ():
 if __name__ == '__main__':
     try:
         start_time = time.time()
-        #terminal_columns = os.popen('stty size', 'r').read().split()[1]; # hack to get terminal columns if not available from 'COLUMNS' environment variable
+	#terminal_columns = os.popen('stty size', 'r').read().split()[1]; # hack to get terminal columns if not available from 'COLUMNS' environment variable
         #parser = optparse.OptionParser(formatter=optparse.TitledHelpFormatter( width = int( os.environ.get('COLUMNS', terminal_columns) ) ), usage=globals()['__doc__'], version='0.6')
         parser = optparse.OptionParser(formatter=optparse.TitledHelpFormatter(), usage=globals()['__doc__'], version='0.6')
         #parser = optparse.OptionParser(formatter=optparse.IndentedHelpFormatter( width = int( os.environ.get('COLUMNS', terminal_columns) ) ), usage=globals()['__doc__'], version='0.4')
         parser.add_option ('--verbose', action='store_true', default=False, help='verbose output');
-        parser.add_option ('-t', '--topology', action='store', type="string", default='ring', 
-                           help='specifies topology (can take values "single_switch", "line", "ring", "double_ring", "star", "mesh", "torus", "fat_tree", "butterfly", "fully_connected", "uni_single_switch", "uni_tree", uni_tree_up", "uni_tree_down", "custom", "ideal", "xbar")');
+	parser.add_option ('-t', '--topology', action='store', type="string", default='ring', 
+	                   help='specifies topology (can take values "single_switch", "line", "ring", "double_ring", "star", "mesh", "torus", "fat_tree", "butterfly", "fully_connected", "uni_single_switch", "uni_tree", uni_tree_up", "uni_tree_down", "custom", "ideal", "xbar")');
         parser.add_option ('--sendmail', action='store', type="string", default='', help='Send email notification when done')
-        parser.add_option ('-n', '--num_routers', action='store', type="int", default=4, help='Specifies number of endpoint routers');
-        parser.add_option ('--send_endpoints', action='store', type="int", default=4, help='Specifies number of send endpoints for uni-directional topologies');
-        parser.add_option ('--recv_endpoints', action='store', type="int", default=4, help='Specifies number of receive endpoints for uni-directional topologies');
-        parser.add_option ('-r', '--routers_per_row', action='store', type="int", default=-1, 
-                           help='specifies number of routers in each row (only used for mesh and torus)');
-        parser.add_option ('-c', '--routers_per_column', action='store', type="int", default=-1, 
-                           help='specifies number of routers in each column (only used for mesh and torus)');
-        parser.add_option ('-v', '--num_vcs', action='store', type="int", default=2, help='specifies number of virtual channels');
-        parser.add_option ('-a', '--alloc_type', action='store', type="string", default='SepIFRoundRobin', 
-                           help='specifies type of allocator (can take values "SepIFRoundRobin", "SepOFRoundRobin", "SepIFStatic", "SepOFStatic", "Memocode")');
-        parser.add_option ('--use_virtual_links', action='store_true', default=False, help='Enables locking of virtual links (VC+OutPort) in the presence of multi-flit packets.');
-        # parser.add_option ('-a', '--alloc_type', action='store', type="string", default='sep_if_', help='specifies type of allocator (can take values:\n"sep_if_rr" (Separable Input-First Round-Robin Allocator),\n"sep_of_rr" (Separable Output-First Round-Robin Allocator),\n"sep_if_st" (Separable Input-First Static Allocator),\n"sep_of_st" (Separable Output-First Static Allocator),\n"memocode"  (Exhaustive maximal allocator used in memocode design contest)')
-        parser.add_option ('-d', '--flit_buffer_depth', action='store', type="int", default=4, help='specifies depth of flit buffers');
-        parser.add_option ('-s', '--sink_buffer_depth', action='store', type="int", default=-1, 
-                           help='specifies depth of buffers at receiving endpoints. If not specified flit_buffer_depth is assumed.');
-        parser.add_option ('-w', '--flit_data_width', action='store', type="int", default=256, help='specifies flit data width');
-        parser.add_option ('-i', '--cut', action='store', type="int", default=0, help='specifies the cut in an ideal or xbar network');
-        parser.add_option ('-p', '--file_prefix', action='store', type="string", default='', help='override default file prefix');
-        parser.add_option ('-l', '--xbar_lanes', action='store', type="int", default=1, help="specifies number of lanes in Xbar network");
-        parser.add_option ('-o', '--output_dir', action='store', type="string", default='.', help='specifies output directory (default is ./)');
-        parser.add_option ('-g', '--gen_rtl', action='store_true', default=False, help='invokes bsc compiler to generate rtl');
-        parser.add_option ('-x', '--run_xst', action='store_true', default=False, help='generates rtl and invokes xst for synthesis');
-        parser.add_option ('--run_dc', action='store_true', default=False, help='generates rtl and invokes Synopsys DC for synthesis');
-        parser.add_option ('--expose_unused_ports', action='store_true', default=False, help='Exposes unused user ports for Mesh topology.');
-        parser.add_option ('--flow_control_type', action='store', type="string", default='credit', 
-                           help='specifies flow control type, Credit-based or Peek (can take values "credit", "peek")');
-        parser.add_option ('--peek_flow_control', action='store_true', default=False, help='Uses simpler peek flow control interface instead of credit-based interface.');
-        parser.add_option ('--router_type', action='store', type="string", default='vc', 
-                           help='specifies router type, Virtual-Channel-based, Virtual-Output-Queued or Input-Queued (can take values "vc", "voq", "iq")');
-        parser.add_option ('--voq_routers', action='store_true', default=False, help='Use Virtual-Output-Queued (VOQ) routers instead of Virtual-Channel (VC) routers.');
-        parser.add_option ('--uni_tree_inputs', action='store', type="int", default=4, help='Number of tree input ports.');
-        parser.add_option ('--uni_tree_outputs', action='store', type="int", default=64, help='Number of tree input ports.');
-        parser.add_option ('--uni_tree_fanout', action='store', type="int", default=0, help='Fan-out of each tree router (will be calculated automatically if set to 0).');
-        parser.add_option ('--uni_tree_distribute_leaves', action='store_true', default=False, help='Distributes the leaf nodes to the available routers, when the tree does not perfectly fit the available leaf nodes.');
-        parser.add_option ('--pipeline_core', action='store_true', default=False, help='Pipelines router core.');
-        parser.add_option ('--pipeline_alloc', action='store_true', default=False, help='Pipelines router allocator.');
-        parser.add_option ('--pipeline_links', action='store_true', default=False, help='Pipelines flit and credit links.');
-        parser.add_option ('--concentration_factor', action='store', type="int", default=1, 
-                           help='specifies number of user ports per endpoint router (not implemented yet)');
-        parser.add_option ('--custom_topology', action='store', type="string", default="", help='specifies custom topology file.');
-        parser.add_option ('--custom_routing', action='store', type="string", default="", help='specifies custom routing file.');
-        parser.add_option ('--dump_topology_file', action='store_true', default=False, help='dumps the topology spec file for the generated network.');
-        parser.add_option ('--dump_routing_file', action='store_true', default=False, help='dumps the routing spec file for the generated network.');
-        parser.add_option ('--dbg', action='store_true', default=False, help='Enables debug messages in generated rtl.');
-        parser.add_option ('--dbg_detail', action='store_true', default=False, help='Enables more detailed debug messages in generated rtl.');
-        parser.add_option ('--gen_graph', action='store_true', default=False, help='Visualizes network graph using graphviz.');
-        parser.add_option ('--graph_nodes', action='store_true', default=False, help='Also includes endpoint nodes in generated graph.');
-        parser.add_option ('--graph_format', action='store', type="string", default="svg", help='Specifies output format for graphviz (e.g., png, jpg or svg)');
-        parser.add_option ('--graph_layout', action='store', type="string", default="invalid", help='Specifies graphviz layout engine (e.g., dot, neato, circle)');
-        # Future parameters
-        # Pick between different allocation schemes (e.g. matrix allocators, wavefront allocators, etc)
-        # choose implementation details (e.g. BRAM/LUT RAM, etc)
+	parser.add_option ('-n', '--num_routers', action='store', type="int", default=4, help='Specifies number of endpoint routers');
+	parser.add_option ('--send_endpoints', action='store', type="int", default=4, help='Specifies number of send endpoints for uni-directional topologies');
+	parser.add_option ('--recv_endpoints', action='store', type="int", default=4, help='Specifies number of receive endpoints for uni-directional topologies');
+	parser.add_option ('-r', '--routers_per_row', action='store', type="int", default=-1, 
+	                   help='specifies number of routers in each row (only used for mesh and torus)');
+	parser.add_option ('-c', '--routers_per_column', action='store', type="int", default=-1, 
+	                   help='specifies number of routers in each column (only used for mesh and torus)');
+	parser.add_option ('-v', '--num_vcs', action='store', type="int", default=2, help='specifies number of virtual channels');
+	parser.add_option ('-a', '--alloc_type', action='store', type="string", default='SepIFRoundRobin', 
+	                   help='specifies type of allocator (can take values "SepIFRoundRobin", "SepOFRoundRobin", "SepIFStatic", "SepOFStatic", "Memocode")');
+	parser.add_option ('--use_virtual_links', action='store_true', default=False, help='Enables locking of virtual links (VC+OutPort) in the presence of multi-flit packets.');
+	# parser.add_option ('-a', '--alloc_type', action='store', type="string", default='sep_if_', help='specifies type of allocator (can take values:\n"sep_if_rr" (Separable Input-First Round-Robin Allocator),\n"sep_of_rr" (Separable Output-First Round-Robin Allocator),\n"sep_if_st" (Separable Input-First Static Allocator),\n"sep_of_st" (Separable Output-First Static Allocator),\n"memocode"  (Exhaustive maximal allocator used in memocode design contest)')
+	parser.add_option ('-d', '--flit_buffer_depth', action='store', type="int", default=4, help='specifies depth of flit buffers');
+	parser.add_option ('-s', '--sink_buffer_depth', action='store', type="int", default=-1, 
+	                   help='specifies depth of buffers at receiving endpoints. If not specified flit_buffer_depth is assumed.');
+	parser.add_option ('-w', '--flit_data_width', action='store', type="int", default=256, help='specifies flit data width');
+	parser.add_option ('-i', '--cut', action='store', type="int", default=0, help='specifies the cut in an ideal or xbar network');
+	parser.add_option ('-p', '--file_prefix', action='store', type="string", default='', help='override default file prefix');
+	parser.add_option ('-l', '--xbar_lanes', action='store', type="int", default=1, help="specifies number of lanes in Xbar network");
+	parser.add_option ('-o', '--output_dir', action='store', type="string", default='.', help='specifies output directory (default is ./)');
+	parser.add_option ('-g', '--gen_rtl', action='store_true', default=False, help='invokes bsc compiler to generate rtl');
+	parser.add_option ('-x', '--run_xst', action='store_true', default=False, help='generates rtl and invokes xst for synthesis');
+	parser.add_option ('--run_dc', action='store_true', default=False, help='generates rtl and invokes Synopsys DC for synthesis');
+	parser.add_option ('--expose_unused_ports', action='store_true', default=False, help='Exposes unused user ports for Mesh topology.');
+	parser.add_option ('--flow_control_type', action='store', type="string", default='credit', 
+	                   help='specifies flow control type, Credit-based or Peek (can take values "credit", "peek")');
+	parser.add_option ('--peek_flow_control', action='store_true', default=False, help='Uses simpler peek flow control interface instead of credit-based interface.');
+	parser.add_option ('--router_type', action='store', type="string", default='vc', 
+	                   help='specifies router type, Virtual-Channel-based, Virtual-Output-Queued or Input-Queued (can take values "vc", "voq", "iq")');
+	parser.add_option ('--voq_routers', action='store_true', default=False, help='Use Virtual-Output-Queued (VOQ) routers instead of Virtual-Channel (VC) routers.');
+	parser.add_option ('--uni_tree_inputs', action='store', type="int", default=4, help='Number of tree input ports.');
+	parser.add_option ('--uni_tree_outputs', action='store', type="int", default=64, help='Number of tree input ports.');
+	parser.add_option ('--uni_tree_fanout', action='store', type="int", default=0, help='Fan-out of each tree router (will be calculated automatically if set to 0).');
+	parser.add_option ('--uni_tree_distribute_leaves', action='store_true', default=False, help='Distributes the leaf nodes to the available routers, when the tree does not perfectly fit the available leaf nodes.');
+	parser.add_option ('--pipeline_core', action='store_true', default=False, help='Pipelines router core.');
+	parser.add_option ('--pipeline_alloc', action='store_true', default=False, help='Pipelines router allocator.');
+	parser.add_option ('--pipeline_links', action='store_true', default=False, help='Pipelines flit and credit links.');
+	parser.add_option ('--concentration_factor', action='store', type="int", default=1, 
+	                   help='specifies number of user ports per endpoint router (not implemented yet)');
+	parser.add_option ('--custom_topology', action='store', type="string", default="", help='specifies custom topology file.');
+	parser.add_option ('--custom_routing', action='store', type="string", default="", help='specifies custom routing file.');
+	parser.add_option ('--dump_topology_file', action='store_true', default=False, help='dumps the topology spec file for the generated network.');
+	parser.add_option ('--dump_routing_file', action='store_true', default=False, help='dumps the routing spec file for the generated network.');
+	parser.add_option ('--dbg', action='store_true', default=False, help='Enables debug messages in generated rtl.');
+	parser.add_option ('--dbg_detail', action='store_true', default=False, help='Enables more detailed debug messages in generated rtl.');
+	parser.add_option ('--gen_graph', action='store_true', default=False, help='Visualizes network graph using graphviz.');
+	parser.add_option ('--graph_nodes', action='store_true', default=False, help='Also includes endpoint nodes in generated graph.');
+	parser.add_option ('--graph_format', action='store', type="string", default="svg", help='Specifies output format for graphviz (e.g., png, jpg or svg)');
+	parser.add_option ('--graph_layout', action='store', type="string", default="invalid", help='Specifies graphviz layout engine (e.g., dot, neato, circle)');
+	# Future parameters
+	# Pick between different allocation schemes (e.g. matrix allocators, wavefront allocators, etc)
+	# choose implementation details (e.g. BRAM/LUT RAM, etc)
 
         (options, args) = parser.parse_args()
         if (len(sys.argv) < 2):
             parser.print_help(); #parser.error ('missing argument')
             sys.exit(0)
         main()
-        if options.verbose: print('Done in', (time.time() - start_time), 'seconds') 
+        if options.verbose: print 'Done in', (time.time() - start_time), 'seconds' 
         sys.exit(0)
-    except KeyboardInterrupt as e: # Ctrl-C
+    except KeyboardInterrupt, e: # Ctrl-C
         raise e
-    except SystemExit as e: # sys.exit()
+    except SystemExit, e: # sys.exit()
         raise e
-    except Exception as e:
-        print('ERROR, UNEXPECTED EXCEPTION')
-        print(str(e))
+    except Exception, e:
+        print 'ERROR, UNEXPECTED EXCEPTION'
+        print str(e)
         traceback.print_exc()
         os._exit(1)
 
